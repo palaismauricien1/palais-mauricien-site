@@ -5,7 +5,7 @@
 // ===== LOGIN (Supabase Auth) =====
 let currentCat = 'plats';
 
-const ADMIN_EMAIL = 'contact@palaismauricien.re';
+const ADMIN_EMAIL = 'palaismauricien@gmail.com';
 
 // Auto-login si déjà authentifié
 (async () => {
