@@ -21,6 +21,16 @@ document.getElementById('loginForm')?.addEventListener('submit', e => {
 
 document.getElementById('logoutBtn')?.addEventListener('click', () => location.reload());
 
+// Toggle password visibility on login screen
+document.getElementById('loginEye')?.addEventListener('click', () => {
+  const pwd = document.getElementById('loginPwd');
+  const eye = document.getElementById('loginEye');
+  const isPwd = pwd.type === 'password';
+  pwd.type = isPwd ? 'text' : 'password';
+  eye.classList.toggle('active', isPwd);
+  eye.setAttribute('aria-label', isPwd ? 'Masquer le mot de passe' : 'Afficher le mot de passe');
+});
+
 // ===== NAVIGATION =====
 document.querySelectorAll('.nav-item').forEach(btn => {
   btn.addEventListener('click', () => {

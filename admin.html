@@ -17,9 +17,13 @@
       <div class="login-logo">PM</div>
       <h1>Administration</h1>
       <p>Palais Mauricien</p>
-      <form id="loginForm">
-        <div class="login-field">
-          <input type="password" id="loginPwd" placeholder="Mot de passe" autocomplete="current-password"/>
+      <form id="loginForm" action="#" method="post" autocomplete="on">
+        <input type="text" name="username" value="admin" autocomplete="username" style="display:none" aria-hidden="true" tabindex="-1" readonly/>
+        <div class="login-field login-field-pwd">
+          <input type="password" id="loginPwd" placeholder="Mot de passe" autocomplete="current-password" name="password" required/>
+          <button type="button" class="login-eye" id="loginEye" aria-label="Afficher le mot de passe">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
         </div>
         <div class="login-error" id="loginError">Mot de passe incorrect</div>
         <button type="submit" class="btn-primary">Connexion</button>
