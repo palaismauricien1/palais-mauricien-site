@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin — Palais Mauricien</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="admin.css?v=2"/>
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-box">
+      <div class="login-logo">PM</div>
+      <h1>Administration</h1>
+      <p>Palais Mauricien</p>
+      <form id="loginForm">
+        <div class="login-field">
+          <input type="password" id="loginPwd" placeholder="Mot de passe" autocomplete="current-password"/>
+        </div>
+        <div class="login-error" id="loginError">Mot de passe incorrect</div>
+        <button type="submit" class="btn-primary">Connexion</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADMIN APP -->
+  <div class="admin-app hidden" id="adminApp">
+
+    <!-- MOBILE BACKDROP -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <span class="brand-logo">PM</span>
+        <div>
+          <span class="brand-name">Palais Mauricien</span>
+          <span class="brand-sub">Administration</span>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-page="dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Tableau de bord
+        </button>
+        <button class="nav-item" data-page="menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          Gestion du Menu
+        </button>
+        <button class="nav-item" data-page="dispo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          Plats du jour
+        </button>
+        <button class="nav-item" data-page="hours">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Horaires
+        </button>
+        <button class="nav-item" data-page="settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41M20 12h2M2 12h2M12 20v2M12 2v2"/></svg>
+          Paramètres
+        </button>
+      </nav>
+      <button class="logout-btn" id="logoutBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        Déconnexion
+      </button>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="admin-main">
+
+      <!-- HEADER -->
+      <div class="admin-header">
+        <button class="burger-btn" id="burgerBtn" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+        <h2 id="pageTitle">Tableau de bord</h2>
+        <a href="index.html" target="_blank" rel="noopener noreferrer" class="btn-outline">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+          Voir le site
+        </a>
+      </div>
+
+      <!-- PAGE: DASHBOARD -->
+      <div class="page active" id="page-dashboard">
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon">👁️</div>
+            <div class="stat-value" id="statToday">0</div>
+            <div class="stat-lbl">Visites aujourd'hui</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📅</div>
+            <div class="stat-value" id="statWeek">0</div>
+            <div class="stat-lbl">Cette semaine</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-value" id="statMonth">0</div>
+            <div class="stat-lbl">Ce mois</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🏆</div>
+            <div class="stat-value" id="statTotal">0</div>
+            <div class="stat-lbl">Total visites</div>
+          </div>
+        </div>
+        <div class="chart-card">
+          <h3>Visites — 7 derniers jours</h3>
+          <div class="bar-chart" id="barChart"></div>
+        </div>
+        <div class="info-row">
+          <div class="info-card">
+            <h3>Infos restaurant</h3>
+            <div class="info-line"><span>Adresse</span><strong>22 Av. de la Commune de Paris, Le Port 97420</strong></div>
+            <div class="info-line"><span>Téléphone</span><strong>+262 693 43 22 25</strong></div>
+            <div class="info-line"><span>Google</span><strong>4,4/5</strong></div>
+          </div>
+          <div class="info-card">
+            <h3>Résumé menu</h3>
+            <div class="info-line"><span>Plats principaux</span><strong id="countPlats">—</strong></div>
+            <div class="info-line"><span>Street food</span><strong id="countStreet">—</strong></div>
+            <div class="info-line"><span>Grillades</span><strong id="countGrillades">—</strong></div>
+            <div class="info-line"><span>Desserts</span><strong id="countDesserts">—</strong></div>
+            <div class="info-line"><span>Boissons</span><strong id="countBoissons">—</strong></div>
+            <div class="info-line"><span>Disponibles aujourd'hui</span><strong id="countDispo">—</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGE: MENU -->
+      <div class="page" id="page-menu">
+        <div class="menu-toolbar">
+          <div class="cat-tabs">
+            <button class="cat-tab active" data-cat="plats">Plats principaux</button>
+            <button class="cat-tab" data-cat="street">Street food</button>
+            <button class="cat-tab" data-cat="grillades">Grillades</button>
+            <button class="cat-tab" data-cat="desserts">Desserts</button>
+            <button class="cat-tab" data-cat="boissons">Boissons</button>
+          </div>
+          <button class="btn-primary" id="addItemBtn">+ Ajouter un plat</button>
+        </div>
+        <div class="items-list" id="itemsList"></div>
+      </div>
+
+      <!-- PAGE: PLATS DU JOUR -->
+      <div class="page" id="page-dispo">
+        <div class="dispo-header">
+          <div class="dispo-header-left">
+            <p class="dispo-date" id="dispoDate">—</p>
+            <p class="dispo-status" id="dispoStatus">—</p>
+          </div>
+          <div class="dispo-header-actions">
+            <button class="btn-ghost-dark" id="dispoCheckAllBtn">Tout cocher</button>
+            <button class="btn-ghost-dark" id="dispoUncheckAllBtn">Tout décocher</button>
+          </div>
+        </div>
+        <div class="dispo-warn hidden" id="dispoWarn">
+          ⚠ La sélection date d'un autre jour. Pensez à la mettre à jour pour aujourd'hui.
+        </div>
+        <div class="dispo-cats" id="dispoCats"></div>
+        <div class="dispo-bar">
+          <span class="dispo-count" id="dispoCount">0 plat sélectionné</span>
+          <button class="btn-primary" id="saveDispoBtn">Enregistrer la sélection</button>
+        </div>
+        <div class="save-confirm hidden" id="dispoSaved">✓ Sélection enregistrée</div>
+      </div>
+
+      <!-- PAGE: HOURS -->
+      <div class="page" id="page-hours">
+        <div class="hours-grid" id="hoursGrid"></div>
+        <button class="btn-primary" id="saveHoursBtn" style="margin-top:24px">Enregistrer les horaires</button>
+        <div class="save-confirm hidden" id="hoursSaved">✓ Horaires enregistrés</div>
+      </div>
+
+      <!-- PAGE: SETTINGS -->
+      <div class="page" id="page-settings">
+        <div class="settings-card">
+          <h3>Changer le mot de passe admin</h3>
+          <div class="form-group">
+            <label>Mot de passe actuel</label>
+            <input type="password" id="oldPwd" placeholder="••••••••"/>
+          </div>
+          <div class="form-group">
+            <label>Nouveau mot de passe</label>
+            <input type="password" id="newPwd" placeholder="••••••••"/>
+          </div>
+          <div class="form-group">
+            <label>Confirmer le nouveau</label>
+            <input type="password" id="confirmPwd" placeholder="••••••••"/>
+          </div>
+          <button class="btn-primary" id="savePwdBtn">Enregistrer</button>
+          <div class="save-confirm hidden" id="pwdSaved"></div>
+        </div>
+        <div class="settings-card">
+          <h3>Réinitialiser les données</h3>
+          <p style="color:var(--muted);font-size:.85rem;margin-bottom:16px">Remet le menu et les horaires aux valeurs par défaut. Cette action est irréversible.</p>
+          <button class="btn-danger" id="resetBtn">Réinitialiser tout</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- MODAL AJOUTER/MODIFIER PLAT -->
+  <div class="modal-overlay hidden" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalTitle">Ajouter un plat</h3>
+        <button class="modal-close" id="modalClose">✕</button>
+      </div>
+      <form id="itemForm" novalidate>
+        <input type="hidden" id="itemId"/>
+        <input type="hidden" id="itemCat"/>
+        <div class="form-group">
+          <label>Nom du plat *</label>
+          <input type="text" id="itemName" placeholder="ex: Masalé Cabri" required/>
+        </div>
+        <div class="form-group">
+          <label>Description *</label>
+          <textarea id="itemDesc" rows="3" placeholder="Courte description du plat..." required></textarea>
+        </div>
+        <div class="form-group">
+          <label>Prix *</label>
+          <input type="text" id="itemPrice" placeholder="ex: 13,50 €" required/>
+        </div>
+        <div class="form-group">
+          <label>Image — URL ou chemin</label>
+          <input type="text" id="itemImgUrl" placeholder="images/mon-plat.png"/>
+        </div>
+        <div class="form-group">
+          <label>Ou uploader une image</label>
+          <input type="file" id="itemImgFile" accept="image/*"/>
+          <div class="img-preview-wrap"><img id="imgPreview" src="" alt="" style="display:none"/></div>
+        </div>
+        <div class="form-check">
+          <input type="checkbox" id="itemVisible" checked/>
+          <label for="itemVisible">Afficher sur le site</label>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-ghost-dark" id="cancelModal">Annuler</button>
+          <button type="submit" class="btn-primary">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="data.js?v=2"></script>
+  <script src="admin.js?v=2"></script>
+</body>
+</html>
