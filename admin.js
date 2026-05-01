@@ -2,24 +2,49 @@
    PALAIS MAURICIEN — admin.js
    ============================================================ */
 
-// ===== LOGIN =====
+// ===== LOGIN (Supabase Auth) =====
 let currentCat = 'plats';
 
-document.getElementById('loginForm')?.addEventListener('submit', e => {
+const ADMIN_EMAIL = 'contact@palaismauricien.re';
+
+// Auto-login si déjà authentifié
+(async () => {
+  if (typeof window.adminIsLoggedIn === 'function' && await window.adminIsLoggedIn()) {
+    await window.syncFromCloud?.();
+    document.getElementById('loginScreen')?.classList.add('hidden');
+    document.getElementById('adminApp')?.classList.remove('hidden');
+    initAdmin();
+  }
+})();
+
+document.getElementById('loginForm')?.addEventListener('submit', async e => {
   e.preventDefault();
   const pwd = document.getElementById('loginPwd').value;
-  const data = getData();
-  if (pwd === data.adminPassword) {
+  const submitBtn = e.target.querySelector('button[type="submit"]');
+  const errEl = document.getElementById('loginError');
+  errEl.classList.remove('visible');
+  if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Connexion…'; }
+
+  const result = await window.adminSignIn(ADMIN_EMAIL, pwd);
+
+  if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Connexion'; }
+
+  if (result.ok) {
+    await window.syncFromCloud?.();
     document.getElementById('loginScreen').classList.add('hidden');
     document.getElementById('adminApp').classList.remove('hidden');
     initAdmin();
   } else {
-    document.getElementById('loginError').classList.add('visible');
+    errEl.classList.add('visible');
+    errEl.textContent = result.error?.includes('Invalid') ? 'Mot de passe incorrect' : 'Erreur : ' + result.error;
     document.getElementById('loginPwd').value = '';
   }
 });
 
-document.getElementById('logoutBtn')?.addEventListener('click', () => location.reload());
+document.getElementById('logoutBtn')?.addEventListener('click', async () => {
+  await window.adminSignOut?.();
+  location.reload();
+});
 
 // Toggle password visibility on login screen
 document.getElementById('loginEye')?.addEventListener('click', () => {
@@ -48,13 +73,24 @@ document.querySelectorAll('.nav-item').forEach(btn => {
 });
 
 // ===== INIT =====
-function initAdmin() {
+async function initAdmin() {
+  // Si Supabase est vide (1ère fois), on pousse les données locales (data.js par défaut OU localStorage)
+  try {
+    const cloud = await window.cloudLoadConfig?.();
+    if (!cloud || Object.keys(cloud).length === 0) {
+      const local = getData();
+      await window.cloudSaveConfig?.(local);
+    }
+  } catch (_) {}
   renderDashboard();
 }
 
 // ===== DASHBOARD =====
-function renderDashboard() {
-  const stats = getVisitStats();
+async function renderDashboard() {
+  // Stats depuis Supabase (multi-device) si dispo, sinon fallback localStorage
+  const stats = (typeof window.cloudGetVisitStats === 'function')
+    ? await window.cloudGetVisitStats()
+    : getVisitStats();
   document.getElementById('statToday').textContent = stats.today;
   document.getElementById('statWeek').textContent = stats.week;
   document.getElementById('statMonth').textContent = stats.month;
@@ -447,19 +483,25 @@ document.getElementById('saveHoursBtn')?.addEventListener('click', () => {
 });
 
 // ===== SETTINGS =====
-document.getElementById('savePwdBtn')?.addEventListener('click', () => {
+document.getElementById('savePwdBtn')?.addEventListener('click', async () => {
   const oldPwd = document.getElementById('oldPwd').value;
   const newPwd = document.getElementById('newPwd').value;
   const confirmPwd = document.getElementById('confirmPwd').value;
   const msg = document.getElementById('pwdSaved');
-  const d = getData();
 
-  if (oldPwd !== d.adminPassword) { msg.textContent = '✕ Mot de passe actuel incorrect'; msg.style.color = '#dc2626'; msg.classList.remove('hidden'); return; }
-  if (newPwd.length < 4) { msg.textContent = '✕ Mot de passe trop court (4 caractères min)'; msg.style.color = '#dc2626'; msg.classList.remove('hidden'); return; }
-  if (newPwd !== confirmPwd) { msg.textContent = '✕ Les mots de passe ne correspondent pas'; msg.style.color = '#dc2626'; msg.classList.remove('hidden'); return; }
+  const showErr = (txt) => { msg.textContent = '✕ ' + txt; msg.style.color = '#dc2626'; msg.classList.remove('hidden'); };
 
-  d.adminPassword = newPwd;
-  saveData(d);
+  if (newPwd.length < 6) return showErr('Mot de passe trop court (6 caractères min)');
+  if (newPwd !== confirmPwd) return showErr('Les mots de passe ne correspondent pas');
+
+  // Vérifier l'ancien mdp en re-signant
+  const verify = await window.adminSignIn(ADMIN_EMAIL, oldPwd);
+  if (!verify.ok) return showErr('Mot de passe actuel incorrect');
+
+  // Mettre à jour le mdp via Supabase Auth
+  const { error } = await window.SB.auth.updateUser({ password: newPwd });
+  if (error) return showErr(error.message);
+
   msg.textContent = '✓ Mot de passe mis à jour'; msg.style.color = '#16a34a'; msg.classList.remove('hidden');
   document.getElementById('oldPwd').value = '';
   document.getElementById('newPwd').value = '';

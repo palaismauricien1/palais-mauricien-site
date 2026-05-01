@@ -154,6 +154,10 @@ function getData() {
 
 function saveData(data) {
   localStorage.setItem('pm_data', JSON.stringify(data));
+  // Push to cloud (Supabase) — async fire-and-forget
+  if (typeof window.cloudSaveConfig === 'function') {
+    window.cloudSaveConfig(data);
+  }
 }
 
 function getNextId(data) {
@@ -192,6 +196,11 @@ function countDispoToday(data) {
 
 /* ---- Visit tracking ---- */
 function trackVisit() {
+  // Cloud (vrai compteur multi-device)
+  if (typeof window.cloudTrackVisit === 'function') {
+    window.cloudTrackVisit();
+  }
+  // Cache local (fallback offline)
   const key = 'pm_visits';
   let visits = [];
   try { visits = JSON.parse(localStorage.getItem(key)) || []; } catch(e) {}
