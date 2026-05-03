@@ -3,6 +3,17 @@
    ============================================================ */
 
 const PAGE = document.body.dataset.page || 'home';
+
+// ===== IMAGE FALLBACK GLOBAL (remplace les `onerror=` inline bloqués par la CSP) =====
+// data-fb="hide"  → cache l'image en cas d'erreur
+// (par défaut)    → bascule sur le logo
+document.addEventListener('error', e => {
+  const t = e.target;
+  if (!t || t.tagName !== 'IMG' || t.dataset.fbDone) return;
+  t.dataset.fbDone = '1';
+  if (t.dataset.fb === 'hide') t.style.display = 'none';
+  else t.src = 'images/logo.png';
+}, true);
 const UBER_URL = 'https://www.ubereats.com/fr/store/palais-mauricien-le-port/_7jTtP06W32kgaXW9Nzmzw?diningMode=PICKUP&utm_campaign=CM2508147-search-free-nonbrand-google-pas_e_all_acq_Global&utm_medium=search-free-nonbrand&utm_source=google-pas&rwg_token=AFd1xnFa5X6LT87TanoBYmyR6c7A63QJJMPi883LKkvaUh7ohlv6qHbwHD7rUtzNdobl-A3J03lFWaZ17GuRpX5RC1j4pOs7xg%3D%3D';
 
 // Transitions de page désactivées — navigation native
@@ -24,8 +35,11 @@ const UBER_URL = 'https://www.ubereats.com/fr/store/palais-mauricien-le-port/_7j
   } catch (_) {}
 })();
 
-// Track visit
-trackVisit();
+// Track visit — uniquement si l'utilisateur a accepté les statistiques
+// (consentement RGPD via le bandeau cookies en bas de page).
+if (localStorage.getItem('pm_cookies_ok') === '1') {
+  trackVisit();
+}
 
 // ===== LOADER — uniquement au premier chargement de la page d'accueil =====
 (function() {
@@ -104,14 +118,14 @@ function renderMenu() {
     panel.innerHTML = items.map(item => `
       <div class="menu-card">
         <div class="card-img-wrap">
-          <img src="${item.img}" alt="${item.name}" loading="lazy" onerror="this.src='images/logo.png'"/>
+          <img src="${escUrl(item.img)}" alt="${escAttr(item.name)}" loading="lazy"/>
           <div class="card-overlay"></div>
         </div>
         <div class="card-body">
-          <h3>${item.name}</h3>
-          <p>${item.desc}</p>
+          <h3>${escHtml(item.name)}</h3>
+          <p>${escHtml(item.desc)}</p>
           <div class="card-body-footer">
-            <span class="price-tag">${getDisplayPrice(item)}</span>
+            <span class="price-tag">${escHtml(getDisplayPrice(item))}</span>
           </div>
         </div>
       </div>
@@ -130,13 +144,13 @@ function renderSpec() {
   list.innerHTML = specs.map((item, idx) => `
     <div class="spec-item ${idx % 2 === 1 ? 'spec-item-reverse' : ''} reveal-up">
       <div class="spec-img">
-        <img src="${item.img}" alt="${item.name}" loading="lazy" onerror="this.src='images/logo.png'"/>
+        <img src="${escUrl(item.img)}" alt="${escAttr(item.name)}" loading="lazy"/>
       </div>
       <div class="spec-content">
         <span class="spec-num">0${idx + 1}</span>
-        <h3>${item.name}</h3>
-        <p>${item.desc}</p>
-        <span class="spec-price">${getDisplayPrice(item)}</span>
+        <h3>${escHtml(item.name)}</h3>
+        <p>${escHtml(item.desc)}</p>
+        <span class="spec-price">${escHtml(getDisplayPrice(item))}</span>
         <a href="${UBER_URL}" target="_blank" rel="noopener" class="btn-gold-sm">Commander sur Uber Eats</a>
       </div>
     </div>
@@ -168,9 +182,9 @@ function renderGalerie() {
   ];
   const heightClass = (i) => sizeSeq[i % sizeSeq.length];
   grid.innerHTML = all.map((item, idx) => `
-    <div class="masonry-item ${heightClass(idx)}" data-src="${item.img}" data-caption="${item.name}" data-cat="${item.cat}">
-      <img src="${item.img}" alt="${item.name}" loading="lazy" onerror="this.src='images/logo.png'"/>
-      <div class="masonry-overlay"><span>${item.name}</span></div>
+    <div class="masonry-item ${heightClass(idx)}" data-src="${escUrl(item.img)}" data-caption="${escAttr(item.name)}" data-cat="${escAttr(item.cat)}">
+      <img src="${escUrl(item.img)}" alt="${escAttr(item.name)}" loading="lazy"/>
+      <div class="masonry-overlay"><span>${escHtml(item.name)}</span></div>
     </div>
   `).join('');
   initLightbox();
@@ -189,10 +203,10 @@ function initFoodCarousel() {
 
   const slideHTML = item => `
     <div class="food-carousel-slide">
-      <img src="${item.img}" alt="${item.name}" loading="lazy" onerror="this.src='images/logo.png'"/>
+      <img src="${escUrl(item.img)}" alt="${escAttr(item.name)}" loading="lazy"/>
       <div class="food-carousel-caption">
-        <div class="food-carousel-name">${item.name}</div>
-        <div class="food-carousel-price">${getDisplayPrice(item)}</div>
+        <div class="food-carousel-name">${escHtml(item.name)}</div>
+        <div class="food-carousel-price">${escHtml(getDisplayPrice(item))}</div>
       </div>
     </div>
   `;
@@ -286,17 +300,17 @@ function renderMenuListe() {
       const hasVariants = Array.isArray(item.variants) && item.variants.length;
       const rightSide = hasVariants
         ? `<div class="menu-ligne-droite menu-ligne-droite-variants">
-             ${item.variants.map(v => `<span class="menu-ligne-variant"><em>${v.name}</em><span class="menu-ligne-variant-prix">${v.price}</span></span>`).join('')}
+             ${item.variants.map(v => `<span class="menu-ligne-variant"><em>${escHtml(v.name)}</em><span class="menu-ligne-variant-prix">${escHtml(v.price)}</span></span>`).join('')}
            </div>`
         : `<div class="menu-ligne-droite">
-             <span class="menu-ligne-prix">${item.price}</span>
+             <span class="menu-ligne-prix">${escHtml(item.price)}</span>
            </div>`;
       const photoBtn = `
         <button class="menu-photo-btn"
-          data-img="${item.img}"
-          data-name="${item.name}"
-          data-desc="${item.desc}"
-          data-price="${getDisplayPrice(item)}"
+          data-img="${escAttr(item.img)}"
+          data-name="${escAttr(item.name)}"
+          data-desc="${escAttr(item.desc)}"
+          data-price="${escAttr(getDisplayPrice(item))}"
           aria-label="Voir la photo">
           <svg viewBox="0 0 24 24" fill="none" width="13" height="13" stroke="currentColor" stroke-width="1.8"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
         </button>`;
@@ -305,8 +319,8 @@ function renderMenuListe() {
         <div class="menu-ligne-gauche">
           <span class="menu-ligne-num">${String(idx+1).padStart(2,'0')}</span>
           <div>
-            <div class="menu-ligne-nom">${item.name}</div>
-            <div class="menu-ligne-desc">${item.desc}</div>
+            <div class="menu-ligne-nom">${escHtml(item.name)}</div>
+            <div class="menu-ligne-desc">${escHtml(item.desc)}</div>
           </div>
         </div>
         ${rightSide}
@@ -636,8 +650,11 @@ function renderFooterStatus() {
   document.getElementById('cookieAccept')?.addEventListener('click', () => {
     localStorage.setItem('pm_cookies_ok', '1');
     banner.classList.add('hidden');
+    // Consentement reçu → on enregistre la visite courante
+    if (typeof trackVisit === 'function') trackVisit();
   });
   document.getElementById('cookieDecline')?.addEventListener('click', () => {
+    localStorage.setItem('pm_cookies_ok', '0');
     banner.classList.add('hidden');
   });
 })();
@@ -686,17 +703,17 @@ function renderDispoPage() {
         <div class="dispo-grid">
           ${items.map(item => `
             <article class="dispo-card"
-              data-img="${item.img}" data-name="${item.name}"
-              data-desc="${item.desc}" data-price="${getDisplayPrice(item)}">
+              data-img="${escAttr(item.img)}" data-name="${escAttr(item.name)}"
+              data-desc="${escAttr(item.desc)}" data-price="${escAttr(getDisplayPrice(item))}">
               <div class="dispo-card-img">
                 <span class="dispo-card-badge">Aujourd'hui</span>
-                <img src="${item.img}" alt="${item.name}" loading="lazy" onerror="this.src='images/logo.png'"/>
+                <img src="${escUrl(item.img)}" alt="${escAttr(item.name)}" loading="lazy"/>
               </div>
               <div class="dispo-card-body">
-                <h3 class="dispo-card-name">${item.name}</h3>
-                <p class="dispo-card-desc">${item.desc}</p>
+                <h3 class="dispo-card-name">${escHtml(item.name)}</h3>
+                <p class="dispo-card-desc">${escHtml(item.desc)}</p>
                 <div class="dispo-card-footer">
-                  <span class="dispo-card-price">${getDisplayPrice(item)}</span>
+                  <span class="dispo-card-price">${escHtml(getDisplayPrice(item))}</span>
                   <a href="${UBER_URL}" target="_blank" rel="noopener" class="dispo-card-call" onclick="event.stopPropagation()">
                     Commander
                     <svg viewBox="0 0 20 20" fill="currentColor" width="11"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd"/></svg>
@@ -736,11 +753,11 @@ function renderHomeToday() {
   grid.innerHTML = all.map(item => `
     <a href="disponible-aujourdhui.html" class="today-card">
       <div class="today-card-img">
-        <img src="${item.img}" alt="${item.name}" loading="lazy" onerror="this.src='images/logo.png'"/>
+        <img src="${escUrl(item.img)}" alt="${escAttr(item.name)}" loading="lazy"/>
       </div>
       <div class="today-card-body">
-        <span class="today-card-name">${item.name}</span>
-        <span class="today-card-price">${getDisplayPrice(item)}</span>
+        <span class="today-card-name">${escHtml(item.name)}</span>
+        <span class="today-card-price">${escHtml(getDisplayPrice(item))}</span>
       </div>
     </a>
   `).join('');

@@ -32,7 +32,7 @@
   <nav class="navbar scrolled" id="navbar">
     <div class="nav-container">
       <a class="nav-logo" href="index.html">
-        <img src="images/logo palaiiis.jpeg" alt="Palais Mauricien" onerror="this.src='images/logo.png'"/>
+        <img src="images/logo palaiiis.jpeg" alt="Palais Mauricien"/>
         <div class="nav-logo-text">
           <span class="nav-logo-main">Palais Mauricien</span>
           <span class="nav-logo-sub">Le Port · La Réunion</span>
@@ -62,7 +62,7 @@
       </a>
 
       <h1 class="legal-title">Mentions <em>légales</em></h1>
-      <p class="legal-date">Dernière mise à jour : avril 2026</p>
+      <p class="legal-date">Dernière mise à jour : mai 2026</p>
 
       <!-- 1. MENTIONS LÉGALES -->
       <div class="legal-section">
@@ -71,8 +71,9 @@
         <p><strong>Forme juridique :</strong> Entreprise individuelle / Restaurant</p>
         <p><strong>Adresse :</strong> 22 Avenue de la Commune de Paris, Le Port 97420, La Réunion</p>
         <p><strong>Téléphone :</strong> <a href="tel:+262693432225">+262 693 43 22 25</a></p>
+        <p><strong>Email :</strong> <a href="mailto:palaismauricien@gmail.com">palaismauricien@gmail.com</a></p>
         <p><strong>Responsable de publication :</strong> Gérant du Palais Mauricien</p>
-        <p><strong>Hébergement :</strong> Site hébergé localement — sans hébergement tiers à ce jour.</p>
+        <p><strong>Hébergeur du site :</strong> Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, États-Unis — <a href="https://vercel.com" target="_blank" rel="noopener">vercel.com</a>. Données techniques (logs serveur) hébergées sur l'infrastructure Vercel ; le site lui-même est servi depuis le réseau de diffusion Vercel (région européenne par défaut).</p>
       </div>
 
       <!-- 2. PROPRIÉTÉ INTELLECTUELLE -->
@@ -99,19 +100,48 @@
       <!-- 4. CONFIDENTIALITÉ & RGPD -->
       <div class="legal-section">
         <h2>4. Politique de confidentialité & RGPD</h2>
+
+        <h3>Responsable du traitement</h3>
+        <p>Le responsable du traitement des données est le gérant du Palais Mauricien, joignable au <a href="tel:+262693432225">+262 693 43 22 25</a> ou par email à <a href="mailto:palaismauricien@gmail.com">palaismauricien@gmail.com</a>.</p>
+
         <h3>Données collectées</h3>
-        <p>Ce site ne collecte aucune donnée personnelle via des formulaires. Il utilise uniquement le stockage local du navigateur (<em>localStorage</em>) pour :</p>
+        <p>Ce site ne contient pas de formulaire de contact ni de création de compte client. Aucune donnée personnelle (nom, email, adresse) n'est demandée aux visiteurs.</p>
+        <p>Toutefois, sous réserve de votre consentement préalable (bandeau cookies), les données techniques suivantes peuvent être collectées :</p>
         <ul>
-          <li>Mémoriser votre consentement aux cookies</li>
-          <li>Comptabiliser les visites de manière anonyme et locale (aucune donnée n'est transmise à un serveur)</li>
+          <li><strong>Statistiques de fréquentation anonymes</strong> : un horodatage est enregistré à chaque visite afin de connaître le nombre quotidien de visiteurs. Aucune adresse IP, aucun identifiant personnel et aucune donnée de profilage ne sont conservés.</li>
         </ul>
-        <h3>Cookies et traceurs</h3>
-        <p>Ce site n'utilise pas de cookies tiers (publicité, réseaux sociaux, analytics externes). Les données stockées localement restent sur votre appareil et ne sont pas transmises à des tiers.</p>
-        <p>Vous pouvez à tout moment effacer ces données via les paramètres de votre navigateur (<em>Effacer les données du site</em>).</p>
+        <p>Le menu, les horaires et la sélection du jour affichés sur le site sont des données publiques relatives au restaurant ; ils ne contiennent aucune donnée à caractère personnel.</p>
+
+        <h3>Sous-traitants et destinataires des données</h3>
+        <ul>
+          <li><strong>Vercel Inc.</strong> (États-Unis) — hébergeur du site et de ses logs techniques (adresses IP, user-agent, requêtes HTTP). Transfert hors UE encadré par les Clauses Contractuelles Types de la Commission européenne. <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener">Politique de confidentialité Vercel</a>.</li>
+          <li><strong>Supabase Inc.</strong> (États-Unis, infrastructure UE/AWS Francfort) — base de données stockant le menu, les horaires et le compteur anonyme de visites. <a href="https://supabase.com/privacy" target="_blank" rel="noopener">Politique de confidentialité Supabase</a>.</li>
+          <li><strong>Google LLC</strong> (États-Unis) — fourniture des polices d'écriture (Google Fonts) ; à chaque page chargée, votre navigateur communique son adresse IP à Google pour récupérer les fichiers de police. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Politique Google</a>.</li>
+          <li><strong>jsDelivr</strong> (réseau de diffusion open-source) — fourniture de la bibliothèque Supabase JavaScript depuis un CDN public.</li>
+        </ul>
+
+        <h3>Cookies et stockage local</h3>
+        <p>Ce site n'utilise pas de cookies HTTP. Il stocke en revanche, dans la mémoire locale de votre navigateur (<em>localStorage</em>), les éléments suivants :</p>
+        <ul>
+          <li><code>pm_cookies_ok</code> — mémorisation de votre choix concernant les statistiques de visite ;</li>
+          <li><code>pm_data</code> — copie locale du menu et des horaires, pour accélérer l'affichage entre deux pages ;</li>
+          <li><code>pm_visits</code> — cache local du compteur de visites ;</li>
+          <li><code>pm_loaded</code> — empêche le ré-affichage de l'animation d'ouverture lors d'une même session.</li>
+        </ul>
+        <p>Aucune de ces données n'est transmise à un serveur publicitaire ou à un réseau social. Vous pouvez les supprimer à tout moment via les paramètres de votre navigateur (« Effacer les données du site »), ou en cliquant sur « Refuser » dans le bandeau de cookies (qui réapparaît à votre prochaine visite).</p>
+
         <h3>Carte Google Maps</h3>
-        <p>La page Contact intègre une carte Google Maps. En chargeant cette carte, votre navigateur peut transmettre des données à Google LLC conformément à leur <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">politique de confidentialité</a>.</p>
+        <p>La page Contact peut intégrer une carte Google Maps. En chargeant cette carte, votre navigateur peut transmettre des données à Google LLC conformément à sa politique de confidentialité.</p>
+
+        <h3>Liens vers Uber Eats et Facebook</h3>
+        <p>Ce site contient des liens sortants vers Uber Eats (commande) et Facebook (page du restaurant). Ces sites tiers traitent leurs visiteurs selon leurs propres politiques. Le Palais Mauricien n'a pas accès aux données collectées par ces plateformes.</p>
+
+        <h3>Durée de conservation</h3>
+        <p>Les statistiques anonymes de visite sont conservées pendant 12 mois maximum, puis purgées. Les logs techniques de l'hébergeur sont conservés selon ses propres durées (consulter sa politique).</p>
+
         <h3>Vos droits</h3>
-        <p>Conformément au RGPD et à la loi Informatique et Libertés, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Pour toute demande : <a href="tel:+262693432225">+262 693 43 22 25</a></p>
+        <p>Conformément au Règlement (UE) 2016/679 (RGPD) et à la loi n° 78-17 « Informatique et Libertés », vous disposez d'un droit d'accès, de rectification, d'effacement, de limitation, d'opposition au traitement, ainsi que d'un droit à la portabilité de vos données. Vous pouvez exercer ces droits en contactant : <a href="mailto:palaismauricien@gmail.com">palaismauricien@gmail.com</a> ou <a href="tel:+262693432225">+262 693 43 22 25</a>.</p>
+        <p>En cas de litige, vous pouvez introduire une réclamation auprès de la Commission Nationale de l'Informatique et des Libertés (CNIL) — <a href="https://www.cnil.fr" target="_blank" rel="noopener">www.cnil.fr</a>.</p>
       </div>
 
       <!-- 5. RESPONSABILITÉ -->
@@ -133,7 +163,7 @@
   <footer class="footer">
     <div class="footer-top">
       <div class="footer-brand">
-        <img src="images/logo palaiiis.jpeg" alt="Palais Mauricien" onerror="this.src='images/logo.png'"/>
+        <img src="images/logo palaiiis.jpeg" alt="Palais Mauricien"/>
         <div>
           <h3>Palais Mauricien</h3>
           <p>Saveurs authentiques de l'Île Maurice</p>
@@ -165,7 +195,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-client.js?v=4"></script>
-  <script src="data.js?v=4"></script>
-  <script src="main.js?v=4"></script>
+  <script src="data.js?v=5"></script>
+  <script src="main.js?v=5"></script>
 </body>
 </html>

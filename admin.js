@@ -2,6 +2,14 @@
    PALAIS MAURICIEN — admin.js
    ============================================================ */
 
+// ===== IMAGE FALLBACK GLOBAL (remplace `onerror=` inline bloqués par la CSP) =====
+document.addEventListener('error', e => {
+  const t = e.target;
+  if (!t || t.tagName !== 'IMG' || t.dataset.fbDone) return;
+  t.dataset.fbDone = '1';
+  t.src = 'images/logo.png';
+}, true);
+
 // ===== LOGIN (Supabase Auth) =====
 let currentCat = 'plats';
 
@@ -153,20 +161,20 @@ function renderDispoPage() {
   const wrap = document.getElementById('dispoCats');
   wrap.innerHTML = MENU_CATS.map(c => {
     const items = data.menu[c.key].filter(i => i.visible);
-    if (!items.length) return `<div class="dispo-cat"><h3>${c.label}</h3><p class="dispo-empty">Aucun plat visible dans cette catégorie.</p></div>`;
+    if (!items.length) return `<div class="dispo-cat"><h3>${escHtml(c.label)}</h3><p class="dispo-empty">Aucun plat visible dans cette catégorie.</p></div>`;
     return `
       <div class="dispo-cat">
-        <h3>${c.label}</h3>
+        <h3>${escHtml(c.label)}</h3>
         <div class="dispo-list">
           ${items.map(item => `
-            <label class="dispo-row" data-id="${item.id}" data-cat="${c.key}">
-              <img class="dispo-img" src="${item.img}" alt="${item.name}" onerror="this.src='images/logo.png'"/>
+            <label class="dispo-row" data-id="${item.id}" data-cat="${escAttr(c.key)}">
+              <img class="dispo-img" src="${escUrl(item.img)}" alt="${escAttr(item.name)}"/>
               <div class="dispo-info">
-                <div class="dispo-name">${item.name}</div>
-                <div class="dispo-desc">${item.desc}</div>
+                <div class="dispo-name">${escHtml(item.name)}</div>
+                <div class="dispo-desc">${escHtml(item.desc)}</div>
               </div>
-              <span class="dispo-price">${getDisplayPrice(item)}</span>
-              <input type="checkbox" class="dispo-check" data-id="${item.id}" data-cat="${c.key}" ${item.dispoToday ? 'checked' : ''}/>
+              <span class="dispo-price">${escHtml(getDisplayPrice(item))}</span>
+              <input type="checkbox" class="dispo-check" data-id="${item.id}" data-cat="${escAttr(c.key)}" ${item.dispoToday ? 'checked' : ''}/>
               <span class="dispo-toggle"></span>
             </label>
           `).join('')}
@@ -226,8 +234,8 @@ function renderMenuPage(cat) {
   list.innerHTML = items.map(item => {
     const hasVariants = Array.isArray(item.variants) && item.variants.length;
     const priceHtml = hasVariants
-      ? `<span class="item-price item-price-variants">${item.variants.map(v => `<em>${v.name}</em>${v.price}`).join(' · ')}</span>`
-      : `<span class="item-price">${item.price || ''}</span>`;
+      ? `<span class="item-price item-price-variants">${item.variants.map(v => `<em>${escHtml(v.name)}</em>${escHtml(v.price)}`).join(' · ')}</span>`
+      : `<span class="item-price">${escHtml(item.price || '')}</span>`;
     const editBtn = hasVariants
       ? `<button class="btn-icon edit-btn disabled" data-id="${item.id}" title="Modification des variantes non supportée — éditer data.js" disabled>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -237,10 +245,10 @@ function renderMenuPage(cat) {
         </button>`;
     return `
     <div class="item-row" data-id="${item.id}">
-      <img class="item-img" src="${item.img}" alt="${item.name}" onerror="this.src='images/logo.png'"/>
+      <img class="item-img" src="${escUrl(item.img)}" alt="${escAttr(item.name)}"/>
       <div class="item-info">
-        <div class="item-name">${item.name}${hasVariants ? ' <span class="item-variants-tag">variantes</span>' : ''}</div>
-        <div class="item-desc">${item.desc}</div>
+        <div class="item-name">${escHtml(item.name)}${hasVariants ? ' <span class="item-variants-tag">variantes</span>' : ''}</div>
+        <div class="item-desc">${escHtml(item.desc)}</div>
       </div>
       <div class="item-price-block">
         ${priceHtml}

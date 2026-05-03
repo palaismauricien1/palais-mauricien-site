@@ -100,9 +100,27 @@ const DEFAULT_DATA = {
     vendredi: { closed: false, midi: { actif: true,  open: "10:30", close: "14:30" }, soir: { actif: true,  open: "18:30", close: "21:30" } },
     samedi:   { closed: false, midi: { actif: true,  open: "10:30", close: "14:30" }, soir: { actif: true,  open: "18:30", close: "21:30" } },
     dimanche: { closed: true,  midi: { actif: false, open: "10:30", close: "14:30" }, soir: { actif: false, open: "18:30", close: "21:30" } }
-  },
-  adminPassword: "luqman2024"
+  }
+  // L'authentification admin est gérée par Supabase Auth (cf. supabase-client.js).
+  // Aucun mot de passe ne doit figurer dans ce fichier — il est servi en clair.
 };
+
+/* ---- Helper anti-XSS ---- */
+function escHtml(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+function escAttr(s) { return escHtml(s); }
+function escUrl(s) {
+  // Autorise http(s), data:image (uploads), et chemins relatifs
+  const v = String(s == null ? '' : s).trim();
+  if (/^(https?:|data:image\/|\/|images\/|\.\.?\/)/i.test(v)) return escAttr(v);
+  return 'images/logo.png';
+}
 
 /* ---- helpers ---- */
 function getData() {
