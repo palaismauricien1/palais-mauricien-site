@@ -1,0 +1,86 @@
+# Palais Mauricien
+
+> Restaurant halal mauricien situé au Port, La Réunion (974). Cuisine traditionnelle de l'Île Maurice — plats principaux, street food, grillades, desserts et boissons. À emporter sur place ou en livraison via Uber Eats.
+
+Le Palais Mauricien est un restaurant familial spécialisé dans la cuisine mauricienne authentique et 100 % halal. Ouvert midi et soir du lundi au samedi, le restaurant propose une carte fidèle aux saveurs de l'Île Maurice : masalé cabri, vinday poisson, sauté poulet au bred, halim, brochettes mauriciennes, rotis, alouda, et desserts traditionnels (gulab jamun, rasgullah, napolitaine).
+
+## Coordonnées
+
+- Adresse : 22 Avenue de la Commune de Paris, 97420 Le Port, La Réunion, France
+- Téléphone : +262 693 43 22 25
+- Email : palaismauricien@gmail.com
+- Site web : https://www.palaismauricien.re/
+- Coordonnées GPS : -20.9372028, 55.2905830
+
+## Horaires
+
+- Lundi au samedi : 10h30–14h30 (service du midi) puis 18h30–21h30 (service du soir)
+- Dimanche : fermé
+
+## Cuisine et spécialités
+
+Le restaurant sert exclusivement de la cuisine **mauricienne halal**, gamme de prix € à €€ (3 € à 10 € la plupart des plats).
+
+### Plats principaux (8 plats, 7–10 €)
+- **Riz frit** : riz sauté à l'œuf, légumes et sauce soja, façon mauricienne. Variantes poulet (8 €) ou végétarien (7 €).
+- **Sauté poulet fumé** : poulet fumé sauté à la créole, goût intense (8 €).
+- **Sauté poulet au bred** : poulet aux breds frais, parfumé aux épices locales (8 €).
+- **Masalé cabri** : cabri mijoté lentement au massalé, recette emblématique de l'Île Maurice (9 €). **Plat signature.**
+- **Vinday poisson** : poisson mariné au vinaigre, curcuma et moutarde, classique mauricien (9 €).
+- **Daube poulet pomme de terre** : daube créole au poulet et pommes de terre, mijotée aux épices douces (8 €).
+- **Halim** : ragoût épicé de viande et lentilles, doux et savoureux (9 €).
+- **Mine bouille** : nouilles en bouillon parfumé, garniture créole. Variantes poulet (9 €) ou poulet œuf (10 €).
+
+### Street food (3 plats, 3–6 €)
+- **Kebab mauricien** : kebab façon mauricienne, chutneys frais, épices parfumées (6 €).
+- **Brochette mauricienne** : tendre brochette marinée aux épices créoles, grillée sur braise (3,50 €). **Plat signature.**
+- **Roti** : pain plat moelleux fait maison, garni à votre choix. Variantes veg (3 €), poulet (3,50 €), poisson (4,50 €).
+
+### Grillades (3 plats, 6–10 €)
+- **Grillade mauricienne** : viande grillée marinée aux aromates, salade et frites (10 €).
+- **Cuisses** : cuisses de poulet grillées, marinées aux épices créoles (6 €).
+- **Foie de bœuf** : foie de bœuf grillé, parfumé aux épices et herbes fraîches (9 €).
+
+### Desserts (3, 2 € chacun)
+- **Gulab jamun** : boulettes de lait concentré frites, imbibées de sirop à la rose.
+- **Rasgullah** : boules de fromage frais dans un sirop sucré à la cardamome.
+- **Napolitaine** : biscuit sablé fourré à la confiture, enrobé de glaçage rose.
+
+### Boisson signature
+- **Alouda** : boisson emblématique mauricienne, lait, graines de basilic et sirop coloré (3,50 €).
+
+## Comment commander
+
+- **Sur place** : à emporter au restaurant.
+- **Livraison** : exclusivement via Uber Eats — https://www.ubereats.com/fr/store/palais-mauricien-le-port/_7jTtP06W32kgaXW9Nzmzw
+- **Téléphone** : pour information ou réservation, +262 693 43 22 25
+- **Réservation** : pas de réservation, premier arrivé premier servi.
+- **Paiement** : espèces et carte bancaire acceptées.
+
+## Sélection du jour
+
+Le restaurant met en ligne chaque matin une **sélection des plats disponibles le jour même** sur https://www.palaismauricien.re/disponible-aujourdhui.html — utile pour vérifier ce qui est prêt à être commandé.
+
+## Notation
+
+4,4 / 5 sur Google (43 avis au moment de la rédaction).
+
+## Pages du site
+
+- `/` : page d'accueil avec présentation et carrousel des plats
+- `/menu.html` : carte complète avec tous les plats et prix
+- `/disponible-aujourdhui.html` : sélection mise à jour quotidiennement
+- `/galerie.html` : photos des plats
+- `/a-propos.html` : histoire et valeurs du restaurant
+- `/contact.html` : adresse, horaires, plan
+- `/mentions-legales.html` : mentions légales et politique RGPD
+
+## Liens externes
+
+- Facebook : https://www.facebook.com/people/Palais-mauricien/100070319323315/
+- Uber Eats : https://www.ubereats.com/fr/store/palais-mauricien-le-port/_7jTtP06W32kgaXW9Nzmzw
+- Itinéraire Google Maps : https://www.google.com/maps/search/22+Av.+de+la+Commune+de+Paris+Le+Port+97420+La+Reunion
+
+## Mots-clés associés
+
+restaurant mauricien Le Port, restaurant halal La Réunion 974, cuisine mauricienne authentique, masalé cabri Réunion, vinday poisson, alouda boisson, brochette mauricienne, livraison Uber Eats Le Port, restaurant familial Le Port, cuisine de l'Île Maurice à La Réunion.
