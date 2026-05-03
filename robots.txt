@@ -4,4 +4,4 @@ Disallow: /admin.html
 Disallow: /admin.css
 Disallow: /admin.js
 
-Sitemap: https://palaismauricien.com/sitemap.xml
+Sitemap: https://www.palaismauricien.re/sitemap.xml
