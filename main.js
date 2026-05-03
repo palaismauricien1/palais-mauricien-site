@@ -8,7 +8,7 @@ const UBER_URL = 'https://www.ubereats.com/fr/store/palais-mauricien-le-port/_7j
 // Transitions de page désactivées — navigation native
 
 // Sync depuis Supabase au chargement (background)
-// Si les données diffèrent du cache local, on recharge pour afficher du frais
+// Si les données du cloud diffèrent du cache local (ou cache vide), on recharge.
 (async () => {
   if (typeof window.syncFromCloud !== 'function') return;
   const before = localStorage.getItem('pm_data');
@@ -16,9 +16,9 @@ const UBER_URL = 'https://www.ubereats.com/fr/store/palais-mauricien-le-port/_7j
     const cloud = await window.syncFromCloud();
     if (!cloud) return;
     const after = localStorage.getItem('pm_data');
-    if (before !== after && before !== null) {
-      // Données fraîches dispos → reload pour appliquer
-      // (sauf premier chargement où le cache était vide)
+    if (before !== after) {
+      // Cache différent du cloud (ou cache vide à la 1re visite) → reload
+      // pour que le rendu utilise les données fraîches plutôt que les défauts.
       location.reload();
     }
   } catch (_) {}
