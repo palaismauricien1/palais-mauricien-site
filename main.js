@@ -389,6 +389,27 @@ function initGalleryFilters() {
   });
 }
 
+// ===== Fermetures exceptionnelles =====
+function getExceptionalClosure(data, dateKey) {
+  const list = (data && Array.isArray(data.exceptionalClosures)) ? data.exceptionalClosures : [];
+  return list.find(c => c.date === dateKey) || null;
+}
+
+function getUpcomingClosures(data, limit) {
+  const list = (data && Array.isArray(data.exceptionalClosures)) ? data.exceptionalClosures : [];
+  const today = getTodayKey();
+  return list
+    .filter(c => c.date && c.date >= today)
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .slice(0, limit || 10);
+}
+
+function formatDateFR(dateKey) {
+  if (!dateKey) return '';
+  const fmt = new Date(dateKey + 'T00:00').toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+  return fmt.charAt(0).toUpperCase() + fmt.slice(1);
+}
+
 // ===== RENDER HORAIRES =====
 function _isOpenNow(h) {
   if (h.closed) return { open: false, next: null };
@@ -416,6 +437,7 @@ function renderHoraires() {
   const days = { lundi:'Lundi', mardi:'Mardi', mercredi:'Mercredi', jeudi:'Jeudi', vendredi:'Vendredi', samedi:'Samedi', dimanche:'Dimanche' };
   const jsMapped = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
   const todayKey = jsMapped[new Date().getDay()];
+  const todayDateKey = getTodayKey();
   const list = document.getElementById('horairesList');
   if (!list) return;
 
@@ -424,8 +446,11 @@ function renderHoraires() {
     const isToday = key === todayKey;
     const midi = h.midi || { actif: false, open: '10:30', close: '14:30' };
     const soir = h.soir || { actif: false, open: '18:30', close: '21:30' };
+    const closureToday = isToday ? getExceptionalClosure(data, todayDateKey) : null;
     let hoursHtml;
-    if (h.closed || (!midi.actif && !soir.actif)) {
+    if (closureToday) {
+      hoursHtml = `<span class="horaire-ferme horaire-exceptionnel">Fermeture exceptionnelle${closureToday.reason ? ' · ' + escHtml(closureToday.reason) : ''}</span>`;
+    } else if (h.closed || (!midi.actif && !soir.actif)) {
       hoursHtml = `<span class="horaire-ferme">Fermé</span>`;
     } else {
       const parts = [];
@@ -439,13 +464,33 @@ function renderHoraires() {
     </div>`;
   }).join('');
 
+  // Liste des prochaines fermetures exceptionnelles (hors aujourd'hui)
+  const upcoming = getUpcomingClosures(data, 6).filter(c => c.date !== todayDateKey);
+  const upcomingWrap = document.getElementById('horairesClosures');
+  if (upcomingWrap) {
+    if (!upcoming.length) {
+      upcomingWrap.innerHTML = '';
+    } else {
+      upcomingWrap.innerHTML = `
+        <div class="closures-public">
+          <h4>Fermetures exceptionnelles à venir</h4>
+          <ul>
+            ${upcoming.map(c => `<li><strong>${escHtml(formatDateFR(c.date))}</strong>${c.reason ? ' — ' + escHtml(c.reason) : ''}</li>`).join('')}
+          </ul>
+        </div>`;
+    }
+  }
+
   const badge = document.getElementById('openBadge');
   const text = document.getElementById('openText');
   if (!badge || !text) return;
   const todayHours = data.hours[todayKey];
+  const closureToday = getExceptionalClosure(data, todayDateKey);
   const { open: isOpen, next } = _isOpenNow(todayHours);
-  badge.classList.toggle('closed', !isOpen);
-  if (isOpen) text.textContent = 'Ouvert maintenant';
+  const reallyOpen = isOpen && !closureToday;
+  badge.classList.toggle('closed', !reallyOpen);
+  if (closureToday) text.textContent = 'Fermeture exceptionnelle aujourd\'hui';
+  else if (reallyOpen) text.textContent = 'Ouvert maintenant';
   else if (todayHours.closed) text.textContent = 'Fermé aujourd\'hui';
   else if (next) text.textContent = `Fermé — Ouvre à ${next}`;
   else text.textContent = 'Fermé pour aujourd\'hui';
@@ -621,9 +666,12 @@ function renderFooterStatus() {
   const jsMapped = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
   const todayKey = jsMapped[new Date().getDay()];
   const todayHours = data.hours[todayKey];
+  const closureToday = getExceptionalClosure(data, getTodayKey());
   const { open: isOpen, next } = _isOpenNow(todayHours);
-  el.className = 'footer-open-status' + (isOpen ? '' : ' closed');
-  if (isOpen) el.textContent = 'Ouvert maintenant';
+  const reallyOpen = isOpen && !closureToday;
+  el.className = 'footer-open-status' + (reallyOpen ? '' : ' closed');
+  if (closureToday) el.textContent = 'Fermeture exceptionnelle';
+  else if (reallyOpen) el.textContent = 'Ouvert maintenant';
   else if (todayHours.closed) el.textContent = 'Fermé aujourd\'hui';
   else if (next) el.textContent = `Fermé · ouvre à ${next}`;
   else el.textContent = 'Fermé pour aujourd\'hui';
@@ -631,6 +679,10 @@ function renderFooterStatus() {
   // Résumé horaires dans le footer (si l'élément existe)
   const desc = document.getElementById('footerHoursDesc');
   if (!desc) return;
+  if (closureToday) {
+    desc.textContent = closureToday.reason ? ('Fermeture exceptionnelle · ' + closureToday.reason) : 'Fermeture exceptionnelle';
+    return;
+  }
   const midi = todayHours.midi || { actif: false };
   const soir = todayHours.soir || { actif: false };
   const parts = [];
@@ -639,6 +691,23 @@ function renderFooterStatus() {
     if (soir.actif) parts.push(`Soir ${soir.open}–${soir.close}`);
   }
   desc.textContent = parts.length ? parts.join(' · ') : 'Fermé aujourd\'hui';
+}
+
+// ===== Bannière fermeture exceptionnelle (toutes pages, en haut sous navbar) =====
+function renderClosureBanner() {
+  const data = getData();
+  const todayDateKey = getTodayKey();
+  const closureToday = getExceptionalClosure(data, todayDateKey);
+  if (!closureToday) return;
+  if (document.getElementById('pmClosureBanner')) return;
+  const banner = document.createElement('div');
+  banner.id = 'pmClosureBanner';
+  banner.className = 'pm-closure-banner';
+  banner.innerHTML = `
+    <span class="pm-closure-banner-icon" aria-hidden="true">⚠</span>
+    <span class="pm-closure-banner-text"><strong>Fermeture exceptionnelle aujourd'hui</strong>${closureToday.reason ? ' — ' + escHtml(closureToday.reason) : ''}</span>
+  `;
+  document.body.prepend(banner);
 }
 
 // ===== COOKIE BANNER =====
@@ -763,6 +832,59 @@ function renderHomeToday() {
   `).join('');
 }
 
+// ===== CARROUSEL AVIS — un seul avis à la fois, flèches + dots + swipe =====
+function initAvisCarousel() {
+  const track = document.getElementById('avisTrack');
+  const prev = document.getElementById('avisPrev');
+  const next = document.getElementById('avisNext');
+  const dotsWrap = document.getElementById('avisDots');
+  if (!track) return;
+  const slides = track.children;
+  const total = slides.length;
+  if (!total) return;
+
+  let idx = 0;
+  // Construit les dots
+  dotsWrap.innerHTML = '';
+  for (let i = 0; i < total; i++) {
+    const b = document.createElement('button');
+    b.className = 'avis-dot' + (i === 0 ? ' active' : '');
+    b.setAttribute('aria-label', 'Avis ' + (i + 1));
+    b.addEventListener('click', () => go(i));
+    dotsWrap.appendChild(b);
+  }
+  function go(n) {
+    idx = (n + total) % total;
+    track.style.transform = 'translateX(-' + (idx * 100) + '%)';
+    Array.from(dotsWrap.children).forEach((d, i) => d.classList.toggle('active', i === idx));
+  }
+  prev?.addEventListener('click', () => go(idx - 1));
+  next?.addEventListener('click', () => go(idx + 1));
+
+  // Clavier (gauche/droite quand le carrousel est focus)
+  document.addEventListener('keydown', e => {
+    const inView = track.getBoundingClientRect();
+    if (inView.top < window.innerHeight && inView.bottom > 0) {
+      if (e.key === 'ArrowLeft' && document.activeElement?.closest?.('.avis-carousel')) go(idx - 1);
+      if (e.key === 'ArrowRight' && document.activeElement?.closest?.('.avis-carousel')) go(idx + 1);
+    }
+  });
+
+  // Swipe tactile
+  let sx = 0, dx = 0;
+  track.addEventListener('touchstart', e => { sx = e.touches[0].clientX; dx = 0; }, { passive: true });
+  track.addEventListener('touchmove', e => { dx = e.touches[0].clientX - sx; }, { passive: true });
+  track.addEventListener('touchend', () => {
+    if (Math.abs(dx) > 40) go(idx + (dx < 0 ? 1 : -1));
+  });
+
+  // Auto-play discret (pause au hover)
+  let timer = setInterval(() => go(idx + 1), 6500);
+  const root = track.closest('.avis-carousel');
+  root?.addEventListener('mouseenter', () => clearInterval(timer));
+  root?.addEventListener('mouseleave', () => { timer = setInterval(() => go(idx + 1), 6500); });
+}
+
 // ===== INIT PAR PAGE =====
 if (PAGE === 'menu') {
   initMenuLightbox();
@@ -779,12 +901,27 @@ if (PAGE === 'contact') {
 if (PAGE === 'home') {
   initFoodCarousel();
   renderHomeToday();
+  initAvisCarousel();
 }
 if (PAGE === 'dispo') {
   initMenuLightbox();
   renderDispoPage();
 }
 
+// ===== Lien TikTok dynamique (footer) =====
+function renderSocialLinks() {
+  try {
+    const data = getData();
+    const url = data?.socials?.tiktok;
+    if (!url) return;
+    document.querySelectorAll('a[data-pm-tiktok]').forEach(a => {
+      a.href = url;
+    });
+  } catch (_) {}
+}
+
 // Toujours
 initBlurText();
 renderFooterStatus();
+renderSocialLinks();
+renderClosureBanner();

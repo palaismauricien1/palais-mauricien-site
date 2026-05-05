@@ -51,43 +51,45 @@ button{border:none;cursor:pointer;background:none;font-family:inherit}
 .cursor-follower.hovered{width:48px;height:48px;border-color:rgba(212,168,83,.7)}
 @media(hover:none){.cursor,.cursor-follower{display:none}}
 
-/* MAPS FLOAT */
+/* CTA FLOATS (Y aller / Commander) — verts élégants, fixes en bas */
 .maps-float{
   position:fixed;bottom:32px;left:32px;z-index:900;
   display:flex;align-items:center;gap:10px;
-  background:var(--bg-2);color:var(--primary);
+  background:linear-gradient(135deg,#2d6a4f 0%,#1b4332 100%);
+  color:#f5f3eb;
   padding:13px 22px 13px 18px;
   font-family:var(--font-body);font-size:.9rem;font-weight:700;letter-spacing:.02em;
-  border:1px solid var(--border-strong);
-  box-shadow:0 4px 24px rgba(0,0,0,.35);
+  border:1px solid rgba(245,243,235,.18);
+  box-shadow:0 6px 28px rgba(27,67,50,.45),0 2px 8px rgba(0,0,0,.25);
   transition:transform .3s var(--ease-spring),box-shadow .3s,background .25s;
   white-space:nowrap;
 }
 .maps-float .maps-icon{flex-shrink:0;transition:transform .4s var(--ease-spring)}
-.maps-float:hover{transform:translateY(-3px);background:var(--surface-2);box-shadow:0 8px 36px rgba(0,0,0,.45)}
+.maps-float:hover{transform:translateY(-3px);background:linear-gradient(135deg,#358666 0%,#1f5238 100%);box-shadow:0 10px 36px rgba(27,67,50,.55)}
 .maps-float:hover .maps-icon{transform:translateY(-2px) scale(1.12)}
 .maps-float::after{
   content:'';position:absolute;inset:0;
-  background:rgba(212,168,83,.06);
+  background:rgba(255,255,255,.10);
   transform:translateX(-100%) skewX(-15deg);
   transition:transform .4s var(--ease)
 }
 .maps-float:hover::after{transform:translateX(110%) skewX(-15deg)}
 @media(max-width:480px){.maps-float{bottom:20px;left:16px;padding:11px 18px 11px 14px;font-size:.85rem}}
 
-/* CALL FLOAT */
 .call-float{
   position:fixed;bottom:32px;right:32px;z-index:900;
   display:flex;align-items:center;gap:10px;
-  background:var(--primary);color:var(--text-dark);
+  background:linear-gradient(135deg,#2d6a4f 0%,#1b4332 100%);
+  color:#f5f3eb;
   padding:13px 22px 13px 18px;
   font-family:var(--font-body);font-size:.9rem;font-weight:700;letter-spacing:.02em;
-  box-shadow:0 4px 32px rgba(212,168,83,.4),0 2px 10px rgba(0,0,0,.3);
-  transition:transform .3s var(--ease-spring),box-shadow .3s;
+  border:1px solid rgba(245,243,235,.18);
+  box-shadow:0 6px 28px rgba(27,67,50,.45),0 2px 10px rgba(0,0,0,.25);
+  transition:transform .3s var(--ease-spring),box-shadow .3s,background .25s;
   white-space:nowrap;
 }
 .call-float .call-icon{flex-shrink:0;transition:transform .4s var(--ease-spring)}
-.call-float:hover{transform:translateY(-3px);box-shadow:0 8px 40px rgba(212,168,83,.5),0 4px 18px rgba(0,0,0,.3)}
+.call-float:hover{transform:translateY(-3px);background:linear-gradient(135deg,#358666 0%,#1f5238 100%);box-shadow:0 10px 40px rgba(27,67,50,.55)}
 .call-float:hover .call-icon{transform:rotate(-10deg) scale(1.1)}
 .call-float::after{
   content:'';position:absolute;inset:0;
@@ -416,6 +418,36 @@ button{border:none;cursor:pointer;background:none;font-family:inherit}
 .horaire-day{font-weight:600;letter-spacing:.01em}
 .horaire-time{font-family:var(--font-mono);font-size:.78rem;color:var(--primary);font-weight:700;letter-spacing:.04em}
 .horaire-ferme{font-family:var(--font-mono);font-size:.75rem;color:#dc2626}
+.horaire-exceptionnel{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(220,38,38,.08);
+  color:#b91c1c;font-weight:700;
+  padding:5px 11px;border-radius:999px;
+  font-size:.7rem;letter-spacing:.04em;
+}
+.closures-public{margin-top:22px;padding:14px 16px;background:rgba(220,38,38,.04);border:1px solid rgba(220,38,38,.18);border-radius:6px}
+.closures-public h4{font-family:var(--font-display);font-size:.95rem;color:#b91c1c;margin-bottom:8px}
+.closures-public ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.closures-public li{font-family:var(--font-body);font-size:.84rem;color:#5a4a3a;line-height:1.5}
+.closures-public li strong{color:#1a0e05;font-weight:600}
+
+/* Bannière fermeture exceptionnelle (toutes pages, sticky en haut) */
+.pm-closure-banner{
+  position:sticky;top:0;left:0;right:0;z-index:950;
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  padding:10px 16px;
+  background:linear-gradient(135deg,#b91c1c 0%,#7f1d1d 100%);
+  color:#fff;
+  font-family:var(--font-body);font-size:.88rem;letter-spacing:.01em;
+  text-align:center;
+  box-shadow:0 4px 18px rgba(0,0,0,.25);
+  border-bottom:1px solid rgba(255,255,255,.12);
+}
+.pm-closure-banner-icon{font-size:1.05rem}
+.pm-closure-banner strong{font-weight:700}
+@media(max-width:560px){
+  .pm-closure-banner{font-size:.78rem;padding:8px 12px;gap:8px}
+}
 .horaire-times{display:flex;flex-direction:column;gap:3px;text-align:right}
 .horaire-service{font-family:var(--font-mono);font-size:.74rem;color:var(--primary);font-weight:600;letter-spacing:.03em}
 .horaire-service em{font-style:normal;color:#8a7a6a;font-weight:400;margin-right:6px;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase}
@@ -1348,6 +1380,68 @@ h1,h2,h3,h4{font-variant-numeric:lining-nums tabular-nums}
   grid-template-columns:repeat(3,1fr);
   gap:1.25rem;
   margin:1.75rem 0 1.5rem;
+}
+/* CARROUSEL AVIS — un seul à la fois, flèches + dots */
+.avis-carousel{
+  position:relative;
+  margin:1.75rem auto 1rem;
+  max-width:720px;
+  padding:0 56px;
+}
+.avis-viewport{
+  overflow:hidden;
+  border-radius:0;
+}
+.avis-track{
+  display:flex;
+  transition:transform .55s cubic-bezier(.23,1,.32,1);
+  will-change:transform;
+}
+.avis-carousel .avis-item{
+  flex:0 0 100%;
+  min-width:0;
+}
+.avis-nav{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  width:42px;height:42px;
+  display:flex;align-items:center;justify-content:center;
+  background:#fff;
+  border:1px solid rgba(212,168,83,.35);
+  color:#9a6e1c;
+  cursor:pointer;
+  border-radius:50%;
+  box-shadow:0 4px 14px rgba(26,14,5,.1);
+  transition:background .25s,color .25s,transform .25s,box-shadow .25s;
+  z-index:2;
+}
+.avis-nav:hover{
+  background:var(--primary);
+  color:#1a0e05;
+  transform:translateY(-50%) scale(1.05);
+  box-shadow:0 6px 22px rgba(212,168,83,.35);
+}
+.avis-nav:active{transform:translateY(-50%) scale(.96)}
+.avis-prev{left:0}
+.avis-next{right:0}
+.avis-dots{
+  display:flex;justify-content:center;gap:8px;
+  margin-top:1.25rem;
+}
+.avis-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:rgba(26,14,5,.18);
+  border:0;cursor:pointer;padding:0;
+  transition:background .25s,transform .25s,width .25s;
+}
+.avis-dot.active{
+  background:var(--primary);
+  width:22px;border-radius:4px;
+}
+@media(max-width:560px){
+  .avis-carousel{padding:0 44px}
+  .avis-nav{width:36px;height:36px}
 }
 .avis-item{
   padding:2rem 1.75rem 1.75rem;

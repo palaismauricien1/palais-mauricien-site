@@ -632,3 +632,27 @@ a{text-decoration:none}
   opacity:.35;cursor:not-allowed;pointer-events:auto
 }
 .btn-icon.disabled:hover{background:transparent}
+
+/* ——— FERMETURES EXCEPTIONNELLES ——— */
+.closures-list{display:flex;flex-direction:column;gap:10px}
+.closure-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-left:3px solid var(--danger);
+  border-radius:var(--radius);
+  gap:12px;
+}
+.closure-row.is-past{opacity:.45;border-left-color:var(--muted)}
+.closure-date{
+  font-family:var(--font-d);font-size:1rem;color:var(--text);font-weight:700;
+}
+.closure-reason{
+  font-family:var(--font-b);font-size:.85rem;color:var(--text-2);
+  margin-top:3px;font-style:italic;
+}
+.closure-past{
+  font-family:var(--font);font-size:.6rem;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--muted);margin-top:4px;
+}

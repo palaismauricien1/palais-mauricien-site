@@ -77,6 +77,8 @@ document.querySelectorAll('.nav-item').forEach(btn => {
     if (page === 'menu') renderMenuPage();
     if (page === 'dispo') renderDispoPage();
     if (page === 'hours') renderHoursPage();
+    if (page === 'closures') renderClosuresPage();
+    if (page === 'settings') renderSettingsPage();
   });
 });
 
@@ -490,7 +492,90 @@ document.getElementById('saveHoursBtn')?.addEventListener('click', () => {
   c.classList.remove('hidden'); setTimeout(() => c.classList.add('hidden'), 2500);
 });
 
+// ===== FERMETURES EXCEPTIONNELLES =====
+function renderClosuresPage() {
+  const list = document.getElementById('closuresList');
+  if (!list) return;
+  const d = getData();
+  const closures = Array.isArray(d.exceptionalClosures) ? d.exceptionalClosures : [];
+
+  // Tri chronologique + suppression des dates passées (info-only)
+  const sorted = [...closures].sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+
+  if (!sorted.length) {
+    list.innerHTML = '<p style="color:var(--muted);font-size:.85rem">Aucune fermeture programmée.</p>';
+    return;
+  }
+
+  const todayKey = getTodayKey();
+  list.innerHTML = sorted.map((c, i) => {
+    const date = c.date || '';
+    const isPast = date < todayKey;
+    const fmt = date ? new Date(date + 'T00:00').toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : '—';
+    return `
+      <div class="closure-row${isPast ? ' is-past' : ''}">
+        <div>
+          <div class="closure-date">${escHtml(fmt.charAt(0).toUpperCase() + fmt.slice(1))}</div>
+          ${c.reason ? `<div class="closure-reason">${escHtml(c.reason)}</div>` : ''}
+          ${isPast ? '<div class="closure-past">Date passée</div>' : ''}
+        </div>
+        <button class="btn-icon danger closure-del" data-date="${escAttr(date)}" title="Supprimer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+        </button>
+      </div>`;
+  }).join('');
+
+  list.querySelectorAll('.closure-del').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (!confirm('Supprimer cette fermeture exceptionnelle ?')) return;
+      const date = btn.dataset.date;
+      const d2 = getData();
+      d2.exceptionalClosures = (d2.exceptionalClosures || []).filter(c => c.date !== date);
+      saveData(d2);
+      renderClosuresPage();
+    });
+  });
+}
+
+document.getElementById('addClosureBtn')?.addEventListener('click', () => {
+  const dateEl = document.getElementById('closureDate');
+  const reasonEl = document.getElementById('closureReason');
+  const date = dateEl?.value;
+  if (!date) { alert('Sélectionnez une date.'); return; }
+
+  const d = getData();
+  if (!Array.isArray(d.exceptionalClosures)) d.exceptionalClosures = [];
+  // Évite les doublons : remplace si la date existe déjà
+  d.exceptionalClosures = d.exceptionalClosures.filter(c => c.date !== date);
+  d.exceptionalClosures.push({ date, reason: (reasonEl?.value || '').trim() });
+  saveData(d);
+
+  if (dateEl) dateEl.value = '';
+  if (reasonEl) reasonEl.value = '';
+  const msg = document.getElementById('closureSaved');
+  msg?.classList.remove('hidden');
+  setTimeout(() => msg?.classList.add('hidden'), 2000);
+  renderClosuresPage();
+});
+
 // ===== SETTINGS =====
+function renderSettingsPage() {
+  const d = getData();
+  const tiktokInput = document.getElementById('tiktokUrl');
+  if (tiktokInput) tiktokInput.value = d.socials?.tiktok || '';
+}
+
+document.getElementById('saveTiktokBtn')?.addEventListener('click', () => {
+  const url = (document.getElementById('tiktokUrl')?.value || '').trim();
+  const d = getData();
+  if (!d.socials || typeof d.socials !== 'object') d.socials = {};
+  d.socials.tiktok = url;
+  saveData(d);
+  const msg = document.getElementById('tiktokSaved');
+  msg?.classList.remove('hidden');
+  setTimeout(() => msg?.classList.add('hidden'), 2000);
+});
+
 document.getElementById('savePwdBtn')?.addEventListener('click', async () => {
   const oldPwd = document.getElementById('oldPwd').value;
   const newPwd = document.getElementById('newPwd').value;

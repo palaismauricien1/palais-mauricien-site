@@ -87,7 +87,7 @@ const DEFAULT_DATA = {
     ],
     boissons: [
       { id: 18, name: "Alouda",
-        desc: "La boisson emblématique mauricienne — lait, graines de basilic et sirop coloré.",
+        desc: "Boisson emblématique mauricienne, lait, graines de basilique, sirop coloré.",
         price: "3,50 €", img: "images/alouda v2.webp", visible: true, dispoToday: false }
     ]
   },
@@ -100,7 +100,14 @@ const DEFAULT_DATA = {
     vendredi: { closed: false, midi: { actif: true,  open: "10:30", close: "14:30" }, soir: { actif: true,  open: "18:30", close: "21:30" } },
     samedi:   { closed: false, midi: { actif: true,  open: "10:30", close: "14:30" }, soir: { actif: true,  open: "18:30", close: "21:30" } },
     dimanche: { closed: true,  midi: { actif: false, open: "10:30", close: "14:30" }, soir: { actif: false, open: "18:30", close: "21:30" } }
-  }
+  },
+  // Réseaux sociaux — modifiables depuis l'admin (Paramètres)
+  socials: {
+    tiktok: "https://www.tiktok.com/@palais.mauricien?_r=1&_t=ZN-967I5KFxmAI"
+  },
+  // Fermetures exceptionnelles (jours ponctuels) — gérées depuis l'admin
+  // Format : tableau de chaînes "YYYY-MM-DD"
+  exceptionalClosures: []
   // L'authentification admin est gérée par Supabase Auth (cf. supabase-client.js).
   // Aucun mot de passe ne doit figurer dans ce fichier — il est servi en clair.
 };
@@ -162,6 +169,20 @@ function getData() {
           if (typeof item.dispoToday === 'undefined') { item.dispoToday = false; dispoMigrated = true; }
         });
       });
+
+      // Migration : socials + exceptionalClosures
+      if (!d.socials || typeof d.socials !== 'object') {
+        d.socials = { ...DEFAULT_DATA.socials };
+        dispoMigrated = true;
+      } else if (typeof d.socials.tiktok === 'undefined') {
+        d.socials.tiktok = DEFAULT_DATA.socials.tiktok;
+        dispoMigrated = true;
+      }
+      if (!Array.isArray(d.exceptionalClosures)) {
+        d.exceptionalClosures = [];
+        dispoMigrated = true;
+      }
+
       if (dispoMigrated) localStorage.setItem('pm_data', JSON.stringify(d));
 
       return d;

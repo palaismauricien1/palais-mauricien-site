@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Lora:ital,wght@0,300;0,400;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="style.css?v=2"/>
+  <link rel="stylesheet" href="style.css?v=3"/>
   <!-- Open Graph -->
   <meta property="og:type" content="restaurant"/>
   <meta property="og:title" content="Palais Mauricien — Restaurant halal, Le Port, La Réunion"/>
@@ -66,6 +66,7 @@
     "paymentAccepted": "Cash, Credit Card",
     "sameAs": [
       "https://www.facebook.com/people/Palais-mauricien/100070319323315/",
+      "https://www.tiktok.com/@palais.mauricien",
       "https://www.ubereats.com/fr/store/palais-mauricien-le-port/_7jTtP06W32kgaXW9Nzmzw"
     ]
   }
@@ -166,7 +167,7 @@
         </div>
         <div class="about-right reveal-right">
           <div class="about-photo-wrap">
-            <img src="images/devanture-hd.png" alt="Devanture du Palais Mauricien, Le Port, La Réunion" class="about-photo"/>
+            <img src="images/photorestaurant.png.jpeg" alt="Devanture du Palais Mauricien, Le Port, La Réunion" class="about-photo"/>
 
           </div>
           <ul class="about-features">
@@ -270,7 +271,6 @@
       </div>
       <div class="commander-steps">
         <div class="commander-step reveal-up" data-delay="0.05">
-          <div class="step-num">01</div>
           <div class="step-icon">
             <svg viewBox="0 0 24 24" fill="none" width="22" height="22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>
           </div>
@@ -279,7 +279,6 @@
         </div>
         <div class="step-connector"></div>
         <div class="commander-step reveal-up" data-delay="0.12">
-          <div class="step-num">02</div>
           <div class="step-icon">
             <svg viewBox="0 0 24 24" fill="none" width="22" height="22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h2l2.4 11.2a2 2 0 002 1.6h9.2a2 2 0 002-1.5L22 7H6"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg>
           </div>
@@ -288,7 +287,6 @@
         </div>
         <div class="step-connector"></div>
         <div class="commander-step reveal-up" data-delay="0.2">
-          <div class="step-num">03</div>
           <div class="step-icon">
             <svg viewBox="0 0 24 24" fill="none" width="22" height="22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </div>
@@ -313,40 +311,51 @@
         <p class="section-label">Ce qu'ils en pensent</p>
         <h2 class="section-heading centered">Ils nous ont noté<br/><em>4,4 / 5 sur Google.</em></h2>
       </div>
-      <div class="avis-grid">
-        <div class="avis-item reveal-up" data-delay="0.05">
-          <div class="avis-stars">★★★★★</div>
-          <p class="avis-text">"Les brochettes mauriciennes sont incroyables. La viande est tendre, bien marinée, et la sauce est à tomber. On sent vraiment les épices authentiques, rien à voir avec ce qu'on trouve ailleurs à La Réunion."</p>
-          <div class="avis-author">
-            <div class="avis-avatar">N</div>
-            <div class="avis-author-info">
-              <span class="avis-name">Nadia R.</span>
-              <span class="avis-date">il y a 3 semaines</span>
+      <div class="avis-carousel reveal-up" id="avisCarousel">
+        <button class="avis-nav avis-prev" id="avisPrev" aria-label="Avis précédent">
+          <svg viewBox="0 0 24 24" fill="none" width="20" height="20" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div class="avis-viewport">
+          <div class="avis-track" id="avisTrack">
+            <div class="avis-item">
+              <div class="avis-stars">★★★★★</div>
+              <p class="avis-text">"Les brochettes mauriciennes sont incroyables. La viande est tendre, bien marinée, et la sauce est à tomber. On sent vraiment les épices authentiques, rien à voir avec ce qu'on trouve ailleurs à La Réunion."</p>
+              <div class="avis-author">
+                <div class="avis-avatar">N</div>
+                <div class="avis-author-info">
+                  <span class="avis-name">Nadia R.</span>
+                  <span class="avis-date">il y a 3 semaines</span>
+                </div>
+              </div>
+            </div>
+            <div class="avis-item">
+              <div class="avis-stars">★★★★★</div>
+              <p class="avis-text">"Super restaurant halal, on peut manger en confiance. Le masalé cabri est ma référence depuis que je l'ai découvert ici. Accueil chaleureux, commande prête à l'heure. Je recommande à tous."</p>
+              <div class="avis-author">
+                <div class="avis-avatar">K</div>
+                <div class="avis-author-info">
+                  <span class="avis-name">Karim M.</span>
+                  <span class="avis-date">il y a 1 mois</span>
+                </div>
+              </div>
+            </div>
+            <div class="avis-item">
+              <div class="avis-stars">★★★★★</div>
+              <p class="avis-text">"La livraison est rapide et les plats arrivent encore bien chauds. L'alouda maison est un vrai délice. Une valeur sûre pour tous ceux qui aiment la vraie cuisine mauricienne au Port."</p>
+              <div class="avis-author">
+                <div class="avis-avatar">S</div>
+                <div class="avis-author-info">
+                  <span class="avis-name">Sophie L.</span>
+                  <span class="avis-date">il y a 2 mois</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div class="avis-item reveal-up" data-delay="0.12">
-          <div class="avis-stars">★★★★★</div>
-          <p class="avis-text">"Super restaurant halal, on peut manger en confiance. Le masalé cabri est ma référence depuis que je l'ai découvert ici. Accueil chaleureux, commande prête à l'heure. Je recommande à tous."</p>
-          <div class="avis-author">
-            <div class="avis-avatar">K</div>
-            <div class="avis-author-info">
-              <span class="avis-name">Karim M.</span>
-              <span class="avis-date">il y a 1 mois</span>
-            </div>
-          </div>
-        </div>
-        <div class="avis-item reveal-up" data-delay="0.2">
-          <div class="avis-stars">★★★★★</div>
-          <p class="avis-text">"La livraison est rapide et les plats arrivent encore bien chauds. L'alouda maison est un vrai délice. Une valeur sûre pour tous ceux qui aiment la vraie cuisine mauricienne au Port."</p>
-          <div class="avis-author">
-            <div class="avis-avatar">S</div>
-            <div class="avis-author-info">
-              <span class="avis-name">Sophie L.</span>
-              <span class="avis-date">il y a 2 mois</span>
-            </div>
-          </div>
-        </div>
+        <button class="avis-nav avis-next" id="avisNext" aria-label="Avis suivant">
+          <svg viewBox="0 0 24 24" fill="none" width="20" height="20" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <div class="avis-dots" id="avisDots"></div>
       </div>
       <div class="avis-footer reveal-up">
         <a href="https://www.google.com/maps/search/Palais+Mauricien+Le+Port+La+Reunion" target="_blank" rel="noopener" class="avis-link">
@@ -371,7 +380,7 @@
         </details>
         <details class="faq-item reveal-up" style="background:rgba(212,168,83,.04);border:1px solid rgba(212,168,83,.15);border-radius:12px;padding:1.2rem 1.5rem;cursor:pointer;font-family:var(--font-body)">
           <summary style="font-family:var(--font-display);font-size:1.05rem;color:#D4A853;font-weight:600;list-style:none;outline:none">Quels sont les horaires d'ouverture ?</summary>
-          <p style="color:rgba(232,220,200,.78);margin-top:.8rem;line-height:1.7">Du <strong>lundi au samedi</strong>, deux services : le midi de <strong>10h30 à 14h30</strong> et le soir de <strong>18h30 à 21h30</strong>. Le restaurant est <strong>fermé le dimanche</strong>.</p>
+          <p style="color:rgba(232,220,200,.78);margin-top:.8rem;line-height:1.7"><strong>11h30 à 14h</strong> et <strong>17h30 à 21h</strong>. Tous les jours <strong>sauf le lundi et le vendredi</strong>.</p>
         </details>
         <details class="faq-item reveal-up" style="background:rgba(212,168,83,.04);border:1px solid rgba(212,168,83,.15);border-radius:12px;padding:1.2rem 1.5rem;cursor:pointer;font-family:var(--font-body)">
           <summary style="font-family:var(--font-display);font-size:1.05rem;color:#D4A853;font-weight:600;list-style:none;outline:none">Où êtes-vous situés ?</summary>
@@ -408,7 +417,7 @@
     "@type": "FAQPage",
     "mainEntity": [
       { "@type": "Question", "name": "Le Palais Mauricien est-il halal ?", "acceptedAnswer": { "@type": "Answer", "text": "Oui, l'intégralité de notre carte est 100 % halal. Toutes nos viandes sont certifiées et nous garantissons la traçabilité de nos approvisionnements." } },
-      { "@type": "Question", "name": "Quels sont les horaires d'ouverture du Palais Mauricien ?", "acceptedAnswer": { "@type": "Answer", "text": "Du lundi au samedi, deux services : le midi de 10h30 à 14h30 et le soir de 18h30 à 21h30. Le restaurant est fermé le dimanche." } },
+      { "@type": "Question", "name": "Quels sont les horaires d'ouverture du Palais Mauricien ?", "acceptedAnswer": { "@type": "Answer", "text": "11h30 à 14h et 17h30 à 21h. Tous les jours sauf le lundi et le vendredi." } },
       { "@type": "Question", "name": "Où est situé le Palais Mauricien ?", "acceptedAnswer": { "@type": "Answer", "text": "Au 22 Avenue de la Commune de Paris, 97420 Le Port, La Réunion. Téléphone : +262 693 43 22 25." } },
       { "@type": "Question", "name": "Comment passer commande au Palais Mauricien ?", "acceptedAnswer": { "@type": "Answer", "text": "Deux options : à emporter directement au restaurant aux heures d'ouverture, ou en livraison via Uber Eats. Nous ne prenons pas de réservation : c'est premier arrivé, premier servi." } },
       { "@type": "Question", "name": "Quels sont les plats signature du Palais Mauricien ?", "acceptedAnswer": { "@type": "Answer", "text": "Le masalé cabri (9 €) est notre incontournable. Côté street food, les brochettes mauriciennes (3,50 €) et les rotis (3 € à 4,50 €) sont très demandés. Pour la boisson, l'alouda (3,50 €) est typiquement mauricienne." } },
@@ -456,6 +465,7 @@
         <h4>Contact</h4>
         <a href="tel:+262693432225">+262 693 43 22 25</a>
         <a href="https://www.facebook.com/people/Palais-mauricien/100070319323315/" target="_blank" rel="noopener">Facebook</a>
+        <a href="https://www.tiktok.com/@palais.mauricien?_r=1&amp;_t=ZN-967I5KFxmAI" target="_blank" rel="noopener" data-pm-tiktok>TikTok</a>
         <p id="footerHoursDesc" style="margin-top:.5rem;font-family:var(--font-body);font-size:.82rem;color:rgba(232,220,200,.38)"></p>
         <div id="footerOpenStatus"></div>
       </div>
@@ -480,7 +490,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-client.js?v=4"></script>
-  <script src="data.js?v=5"></script>
-  <script src="main.js?v=5"></script>
+  <script src="data.js?v=6"></script>
+  <script src="main.js?v=6"></script>
 </body>
 </html>
