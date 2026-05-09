@@ -103,7 +103,7 @@ const DEFAULT_DATA = {
   },
   // Réseaux sociaux — modifiables depuis l'admin (Paramètres)
   socials: {
-    tiktok: "https://www.tiktok.com/@palais.mauricien?_r=1&_t=ZN-967I5KFxmAI"
+    tiktok: "https://www.tiktok.com/@palaismauricien97420?_r=1&_t=ZN-96DznweiNwE"
   },
   // Fermetures exceptionnelles (jours ponctuels) — gérées depuis l'admin
   // Format : tableau de chaînes "YYYY-MM-DD"

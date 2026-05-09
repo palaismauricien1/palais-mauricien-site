@@ -26,6 +26,18 @@ const UBER_URL = 'https://www.ubereats.com/fr/store/palais-mauricien-le-port/_7j
   try {
     const cloud = await window.syncFromCloud();
     if (!cloud) return;
+
+    // Migration silencieuse : ancien handle TikTok → nouveau (push vers Supabase une fois)
+    try {
+      const NEW_TIKTOK = "https://www.tiktok.com/@palaismauricien97420?_r=1&_t=ZN-96DznweiNwE";
+      const dd = getData();
+      if (dd.socials && typeof dd.socials.tiktok === 'string'
+          && dd.socials.tiktok.includes('@palais.mauricien')) {
+        dd.socials.tiktok = NEW_TIKTOK;
+        saveData(dd); // écrit localStorage + push cloud (fire-and-forget)
+      }
+    } catch (_) {}
+
     const after = localStorage.getItem('pm_data');
     if (before !== after) {
       // Cache différent du cloud (ou cache vide à la 1re visite) → reload
