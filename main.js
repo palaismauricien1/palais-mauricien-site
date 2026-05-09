@@ -776,6 +776,7 @@ function renderDispoPage() {
               data-desc="${escAttr(item.desc)}" data-price="${escAttr(getDisplayPrice(item))}">
               <div class="dispo-card-img">
                 <span class="dispo-card-badge">Aujourd'hui</span>
+                ${renderRemainingBadge(item)}
                 <img src="${escUrl(item.img)}" alt="${escAttr(item.name)}" loading="lazy"/>
               </div>
               <div class="dispo-card-body">
@@ -822,6 +823,7 @@ function renderHomeToday() {
   grid.innerHTML = all.map(item => `
     <a href="disponible-aujourdhui.html" class="today-card">
       <div class="today-card-img">
+        ${renderRemainingBadge(item)}
         <img src="${escUrl(item.img)}" alt="${escAttr(item.name)}" loading="lazy"/>
       </div>
       <div class="today-card-body">
@@ -830,6 +832,17 @@ function renderHomeToday() {
       </div>
     </a>
   `).join('');
+}
+
+// Badge "X restants" / "Rupture de stock" — null = ne rien afficher
+function renderRemainingBadge(item) {
+  const r = item && item.remaining;
+  if (r === null || r === undefined) return '';
+  if (r === 0) return `<span class="remaining-badge remaining-out">❌ Rupture de stock</span>`;
+  if (typeof r === 'number' && r > 0) {
+    return `<span class="remaining-badge remaining-ok">🔥 ${r} restant${r > 1 ? 's' : ''}</span>`;
+  }
+  return '';
 }
 
 // ===== CARROUSEL AVIS — un seul avis à la fois, flèches + dots + swipe =====

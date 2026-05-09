@@ -2010,3 +2010,26 @@ img,video,svg{max-width:100%}
   .nav-logo-main{font-size:.85rem}
   .nav-logo-sub{font-size:.5rem;letter-spacing:.18em}
 }
+
+/* ==========================================================
+   BADGE "X restants" / "Rupture de stock"
+   ========================================================== */
+.remaining-badge{
+  position:absolute;bottom:10px;left:10px;z-index:2;
+  display:inline-flex;align-items:center;gap:.3rem;
+  font-family:var(--font-mono);font-size:.62rem;letter-spacing:.1em;
+  text-transform:uppercase;font-weight:700;
+  padding:6px 10px;border-radius:2px;
+  backdrop-filter:blur(6px);
+  box-shadow:0 2px 8px rgba(0,0,0,.35)
+}
+.remaining-ok{
+  background:rgba(212,168,83,.92);color:#1a1108
+}
+.remaining-out{
+  background:rgba(180,40,40,.92);color:#fff
+}
+@media(max-width:600px){
+  .remaining-badge{font-size:.55rem;padding:5px 8px;bottom:8px;left:8px}
+}
+

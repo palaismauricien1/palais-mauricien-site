@@ -168,7 +168,9 @@ function renderDispoPage() {
       <div class="dispo-cat">
         <h3>${escHtml(c.label)}</h3>
         <div class="dispo-list">
-          ${items.map(item => `
+          ${items.map(item => {
+            const remVal = (item.remaining === 0 || item.remaining > 0) ? item.remaining : '';
+            return `
             <label class="dispo-row" data-id="${item.id}" data-cat="${escAttr(c.key)}">
               <img class="dispo-img" src="${escUrl(item.img)}" alt="${escAttr(item.name)}"/>
               <div class="dispo-info">
@@ -176,52 +178,109 @@ function renderDispoPage() {
                 <div class="dispo-desc">${escHtml(item.desc)}</div>
               </div>
               <span class="dispo-price">${escHtml(getDisplayPrice(item))}</span>
+              <span class="dispo-remaining-wrap" title="Nombre de portions restantes (laisser vide pour ne pas afficher)">
+                <input type="number" min="0" step="1" inputmode="numeric"
+                  class="dispo-remaining" data-id="${item.id}" data-cat="${escAttr(c.key)}"
+                  placeholder="—" value="${escAttr(remVal)}"
+                  ${item.dispoToday ? '' : 'disabled'}/>
+                <span class="dispo-remaining-label">restants</span>
+              </span>
               <input type="checkbox" class="dispo-check" data-id="${item.id}" data-cat="${escAttr(c.key)}" ${item.dispoToday ? 'checked' : ''}/>
               <span class="dispo-toggle"></span>
             </label>
-          `).join('')}
+          `;}).join('')}
         </div>
       </div>
     `;
   }).join('');
 
-  // Compteur dynamique
+  // Compteur dynamique + activation/désactivation de l'input quantité selon la case
   const updateCount = () => {
     const n = wrap.querySelectorAll('.dispo-check:checked').length;
     document.getElementById('dispoCount').textContent = n + (n > 1 ? ' plats sélectionnés' : ' plat sélectionné');
   };
-  wrap.querySelectorAll('.dispo-check').forEach(c => c.addEventListener('change', updateCount));
+  wrap.querySelectorAll('.dispo-check').forEach(c => {
+    c.addEventListener('change', () => {
+      const row = c.closest('.dispo-row');
+      const qtyInput = row?.querySelector('.dispo-remaining');
+      if (qtyInput) {
+        qtyInput.disabled = !c.checked;
+        if (!c.checked) qtyInput.value = '';
+      }
+      updateCount();
+    });
+  });
+  // Empêche le clic sur l'input quantité de cocher/décocher la ligne
+  wrap.querySelectorAll('.dispo-remaining-wrap').forEach(el => {
+    el.addEventListener('click', e => e.preventDefault());
+  });
+  wrap.querySelectorAll('.dispo-remaining').forEach(input => {
+    input.addEventListener('click', e => e.stopPropagation());
+    // Validation live : refuse négatifs / décimales / texte
+    input.addEventListener('input', () => {
+      let v = input.value.replace(/[^\d]/g, '');
+      if (v.length > 1) v = v.replace(/^0+/, '') || '0';
+      input.value = v;
+    });
+  });
   updateCount();
 }
 
 document.getElementById('dispoCheckAllBtn')?.addEventListener('click', () => {
-  document.querySelectorAll('#dispoCats .dispo-check').forEach(c => c.checked = true);
-  document.querySelector('#dispoCats .dispo-check')?.dispatchEvent(new Event('change'));
+  document.querySelectorAll('#dispoCats .dispo-check').forEach(c => {
+    c.checked = true;
+    c.dispatchEvent(new Event('change'));
+  });
 });
 document.getElementById('dispoUncheckAllBtn')?.addEventListener('click', () => {
-  document.querySelectorAll('#dispoCats .dispo-check').forEach(c => c.checked = false);
-  document.querySelector('#dispoCats .dispo-check')?.dispatchEvent(new Event('change'));
+  document.querySelectorAll('#dispoCats .dispo-check').forEach(c => {
+    c.checked = false;
+    c.dispatchEvent(new Event('change'));
+  });
 });
 
-document.getElementById('saveDispoBtn')?.addEventListener('click', () => {
-  const d = getData();
-  const checks = document.querySelectorAll('#dispoCats .dispo-check');
-  // Reset puis applique
-  CAT_KEYS.forEach(cat => (d.menu[cat] || []).forEach(i => i.dispoToday = false));
-  checks.forEach(c => {
-    if (!c.checked) return;
-    const cat = c.dataset.cat;
-    const id = parseInt(c.dataset.id);
-    const item = d.menu[cat].find(i => i.id === id);
-    if (item) item.dispoToday = true;
-  });
-  d.dispoDate = getTodayKey();
-  saveData(d);
+document.getElementById('saveDispoBtn')?.addEventListener('click', async () => {
+  const btn = document.getElementById('saveDispoBtn');
   const msg = document.getElementById('dispoSaved');
-  msg.classList.remove('hidden');
-  document.getElementById('dispoWarn').classList.add('hidden');
-  document.getElementById('dispoStatus').textContent = "Sélection à jour pour aujourd'hui.";
-  setTimeout(() => msg.classList.add('hidden'), 2500);
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Sauvegarde…';
+
+  try {
+    const d = getData();
+    const checks = document.querySelectorAll('#dispoCats .dispo-check');
+    // Reset puis applique
+    CAT_KEYS.forEach(cat => (d.menu[cat] || []).forEach(i => { i.dispoToday = false; i.remaining = null; }));
+    checks.forEach(c => {
+      if (!c.checked) return;
+      const cat = c.dataset.cat;
+      const id = parseInt(c.dataset.id);
+      const item = d.menu[cat].find(i => i.id === id);
+      if (!item) return;
+      item.dispoToday = true;
+      // Récupère la quantité associée à cette ligne (validation stricte)
+      const row = c.closest('.dispo-row');
+      const qtyInput = row?.querySelector('.dispo-remaining');
+      item.remaining = normalizeRemaining(qtyInput ? qtyInput.value : '');
+    });
+    d.dispoDate = getTodayKey();
+    saveData(d);
+
+    msg.textContent = '✓ Sélection enregistrée';
+    msg.classList.remove('hidden', 'error');
+    document.getElementById('dispoWarn').classList.add('hidden');
+    document.getElementById('dispoStatus').textContent = "Sélection à jour pour aujourd'hui.";
+    setTimeout(() => msg.classList.add('hidden'), 2500);
+  } catch (err) {
+    msg.textContent = '❌ Erreur lors de la sauvegarde';
+    msg.classList.remove('hidden');
+    msg.classList.add('error');
+    setTimeout(() => msg.classList.add('hidden'), 3500);
+    console.error(err);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
 });
 
 // ===== MENU PAGE =====

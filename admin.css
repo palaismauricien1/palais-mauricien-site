@@ -656,3 +656,41 @@ a{text-decoration:none}
   font-family:var(--font);font-size:.6rem;letter-spacing:.15em;
   text-transform:uppercase;color:var(--muted);margin-top:4px;
 }
+
+/* ——— Quantité restante par plat (page Plats du jour) ——— */
+.dispo-remaining-wrap{
+  display:inline-flex;align-items:center;gap:.32rem;
+  margin-right:.7rem;flex-shrink:0;white-space:nowrap
+}
+.dispo-remaining{
+  width:42px;height:28px;padding:0 6px;
+  border:1px solid var(--border-s);
+  border-radius:var(--radius);
+  background:var(--surface-3);
+  color:var(--text);
+  font-family:var(--font);font-size:.78rem;font-weight:600;
+  text-align:center;line-height:1;
+  -moz-appearance:textfield;
+  color-scheme:dark;
+  transition:border-color .15s,background .15s
+}
+.dispo-remaining::-webkit-outer-spin-button,
+.dispo-remaining::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.dispo-remaining::placeholder{color:rgba(237,227,208,.25)}
+.dispo-remaining:hover:not(:disabled){border-color:var(--primary)}
+.dispo-remaining:focus{outline:none;border-color:var(--primary);background:var(--primary-d)}
+.dispo-remaining:disabled{opacity:.3;cursor:not-allowed}
+.dispo-remaining-label{
+  font-family:var(--font);font-size:.55rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);font-weight:600
+}
+.save-confirm.error{color:var(--danger);background:var(--danger-bg)}
+@media(max-width:768px){
+  .dispo-remaining-wrap{margin-right:.4rem;gap:.25rem}
+  .dispo-remaining{width:34px;height:26px;padding:0 4px;font-size:.72rem}
+  .dispo-remaining-label{font-size:.5rem;letter-spacing:.1em}
+}
+@media(max-width:480px){
+  .dispo-remaining-label{display:none}
+  .dispo-remaining-wrap{margin-right:.3rem}
+}

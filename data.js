@@ -161,12 +161,14 @@ function getData() {
         localStorage.setItem('pm_data', JSON.stringify(d));
       }
 
-      // S'assure que dispoToday existe sur chaque item
+      // S'assure que dispoToday + remaining existent sur chaque item
       let dispoMigrated = false;
       if (typeof d.dispoDate === 'undefined') { d.dispoDate = null; dispoMigrated = true; }
       CAT_KEYS.forEach(cat => {
         (d.menu[cat] || []).forEach(item => {
           if (typeof item.dispoToday === 'undefined') { item.dispoToday = false; dispoMigrated = true; }
+          // null = quantité non configurée (pas affichée), 0 = rupture, >0 = restants
+          if (typeof item.remaining === 'undefined') { item.remaining = null; dispoMigrated = true; }
         });
       });
 
@@ -211,6 +213,16 @@ function getDisplayPrice(item) {
     return 'à partir de ' + item.variants[0].price;
   }
   return '';
+}
+
+/* ---- Quantité restante : validation stricte ----
+   Retourne un entier >= 0, ou null si la valeur est vide / non configurée.
+   Refuse négatifs, NaN, décimales, texte. */
+function normalizeRemaining(value) {
+  if (value === null || value === undefined || value === '') return null;
+  const n = Number(value);
+  if (!Number.isFinite(n) || !Number.isInteger(n) || n < 0) return null;
+  return n;
 }
 
 /* ---- Plats du jour ---- */
