@@ -1,4 +1,4 @@
-# 🎯 Guide complet SEO + AEO + e-réputation — Palais Mauricien
+# 🎯 Guide complet SEO + AEO + e-réputation - Palais Mauricien
 
 Référencement = se faire trouver. Aujourd'hui ça se joue sur 4 fronts :
 1. **SEO Google** (recherche classique)
@@ -21,8 +21,8 @@ Référencement = se faire trouver. Aujourd'hui ça se joue sur 4 fronts :
 - [x] Une seule h1 par page
 
 ### ⚠️ À faire toi-même
-- [ ] **Soumettre sitemap.xml dans Google Search Console** *(5 min)* — voir `SEO-INSCRIPTIONS-PRETES-A-COLLER.md`
-- [ ] **Soumettre dans Bing Webmaster Tools** *(5 min)* — Bing alimente aussi les réponses ChatGPT/Copilot
+- [ ] **Soumettre sitemap.xml dans Google Search Console** *(5 min)* - voir `SEO-INSCRIPTIONS-PRETES-A-COLLER.md`
+- [ ] **Soumettre dans Bing Webmaster Tools** *(5 min)* - Bing alimente aussi les réponses ChatGPT/Copilot
 - [ ] Demander à 2-3 sites locaux (blog food Réunion, presse locale, association de quartier) un lien vers `palaismauricien.re` → backlinks de qualité
 - [ ] Tous les 3 mois : vérifier les rapports Search Console (mots-clés qui rapportent du trafic, pages mal indexées)
 
@@ -51,7 +51,7 @@ Référencement = se faire trouver. Aujourd'hui ça se joue sur 4 fronts :
   - Attributs : halal, à emporter, livraison, sur place, paiement CB, etc.
 
 ### Citations cohérentes (NAP)
-- [ ] Inscrire le resto sur les annuaires : Pages Jaunes, TripAdvisor, Yelp, 974.re, annuaires halal — **avec exactement le même nom, adresse, téléphone partout** (cf. fichier inscriptions)
+- [ ] Inscrire le resto sur les annuaires : Pages Jaunes, TripAdvisor, Yelp, 974.re, annuaires halal - **avec exactement le même nom, adresse, téléphone partout** (cf. fichier inscriptions)
 - [ ] Vérifier qu'aucune ancienne fiche fantôme ne traîne avec un mauvais numéro ou adresse → demander la suppression
 
 ### Avis Google (algorithme)
@@ -61,7 +61,7 @@ Référencement = se faire trouver. Aujourd'hui ça se joue sur 4 fronts :
 
 ---
 
-## 🟣 3. AEO / GEO — Référencement IA (ChatGPT, Claude, Perplexity, Gemini)
+## 🟣 3. AEO / GEO - Référencement IA (ChatGPT, Claude, Perplexity, Gemini)
 
 C'est l'avenir : de plus en plus de gens demandent à ChatGPT "quel est le meilleur restaurant mauricien à La Réunion ?" au lieu de chercher sur Google.
 
@@ -104,7 +104,7 @@ Comme robots.txt mais pour les IA : un résumé du site en markdown. Adopté par
 
 ```
 # Palais Mauricien
-> Restaurant halal mauricien au Port (La Réunion) — cuisine traditionnelle de l'Île Maurice.
+> Restaurant halal mauricien au Port (La Réunion) - cuisine traditionnelle de l'Île Maurice.
 
 ## Adresse et contact
 - 22 Av. de la Commune de Paris, 97420 Le Port, La Réunion
@@ -147,7 +147,7 @@ Les IA puisent énormément dans Wikipedia. Sans entrée Wikipedia, ChatGPT te c
 ### Instagram
 - [ ] Compte Instagram avec bio + lien vers le site
 - [ ] Stories quotidiennes des plats du jour (5 min/jour)
-- [ ] Reels courts (15-30s) : préparation, ambiance — **énorme reach gratuit en 2026**
+- [ ] Reels courts (15-30s) : préparation, ambiance - **énorme reach gratuit en 2026**
 - [ ] Hashtags locaux : `#PalaisMauricien #LePort974 #ReunionFood #CuisineMauricienne #HalalReunion`
 
 ### TikTok (optionnel mais ROI fou)
@@ -172,10 +172,10 @@ Les IA puisent énormément dans Wikipedia. Sans entrée Wikipedia, ChatGPT te c
 ## ⚪ 6. Performance technique (suivi)
 
 À tester tous les 3 mois :
-- [ ] **PageSpeed Insights** : https://pagespeed.web.dev/?url=https%3A%2F%2Fwww.palaismauricien.re — viser ≥ 90 mobile et desktop
+- [ ] **PageSpeed Insights** : https://pagespeed.web.dev/?url=https%3A%2F%2Fwww.palaismauricien.re - viser ≥ 90 mobile et desktop
 - [ ] **Lighthouse** dans Chrome DevTools → tab "Lighthouse" → audit
-- [ ] **Schema validator** : https://validator.schema.org/ — coller `https://www.palaismauricien.re/` et vérifier 0 erreur
-- [ ] **Rich Results Test** : https://search.google.com/test/rich-results — vérifier que Restaurant + Menu + Breadcrumb sont reconnus
+- [ ] **Schema validator** : https://validator.schema.org/ - coller `https://www.palaismauricien.re/` et vérifier 0 erreur
+- [ ] **Rich Results Test** : https://search.google.com/test/rich-results - vérifier que Restaurant + Menu + Breadcrumb sont reconnus
 
 ---
 
@@ -200,12 +200,12 @@ Les IA puisent énormément dans Wikipedia. Sans entrée Wikipedia, ChatGPT te c
 
 ---
 
-## 🚀 Plan d'action concret — par ordre d'impact
+## 🚀 Plan d'action concret - par ordre d'impact
 
 | Priorité | Action | Temps | Impact attendu |
 |---|---|---|---|
-| 🔥 P0 | Revendiquer/compléter Google Business Profile | 30 min | Énorme — 80% du local |
-| 🔥 P0 | Ajouter robots.txt IA + llms.txt + FAQ | (je peux faire) | Important — visibilité IA |
+| 🔥 P0 | Revendiquer/compléter Google Business Profile | 30 min | Énorme - 80% du local |
+| 🔥 P0 | Ajouter robots.txt IA + llms.txt + FAQ | (je peux faire) | Important - visibilité IA |
 | 🔥 P0 | Search Console + sitemap submission | 5 min | Indexation rapide |
 | 🟧 P1 | Inscription Pages Jaunes + TripAdvisor | 15 min | Citations + clients touristes |
 | 🟧 P1 | Demander 30 nouveaux avis Google sur 1 mois | quotidien | Local pack ranking |

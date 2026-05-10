@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8"/><style>html,body{background:#0f0705}</style>
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="Notre histoire — Palais Mauricien, restaurant halal mauricien au Port, La Réunion. Découvrez nos valeurs, notre passion pour la cuisine de l'Île Maurice."/>
-  <title>Qui sommes-nous ? — Palais Mauricien</title>
+  <style>html,body{background:#0f0705}</style>
+  <meta name="description" content="Notre histoire - Palais Mauricien, restaurant halal mauricien au Port, La Réunion. Découvrez nos valeurs, notre passion pour la cuisine de l'Île Maurice."/>
+  <title>Qui sommes-nous ? - Palais Mauricien</title>
   <link rel="icon" type="image/png" href="images/logo.png"/>
   <link rel="canonical" href="https://www.palaismauricien.re/a-propos.html"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Lora:ital,wght@0,300;0,400;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="style.css?v=5"/>
+  <link rel="stylesheet" href="style.css?v=7"/>
   <meta property="og:type" content="website"/>
-  <meta property="og:title" content="Qui sommes-nous ? — Palais Mauricien, Le Port La Réunion"/>
-  <meta property="og:description" content="L'histoire du Palais Mauricien — cuisine halal authentique de l'Île Maurice, préparée avec passion au Port, La Réunion."/>
+  <meta property="og:title" content="Qui sommes-nous ? - Palais Mauricien, Le Port La Réunion"/>
+  <meta property="og:description" content="L'histoire du Palais Mauricien - cuisine halal authentique de l'Île Maurice, préparée avec passion au Port, La Réunion."/>
   <meta property="og:image" content="https://www.palaismauricien.re/images/massalé cabri v2.webp"/>
   <meta name="twitter:image" content="https://www.palaismauricien.re/images/massalé cabri v2.webp"/>
   <meta name="twitter:card" content="summary_large_image"/>
@@ -104,9 +105,20 @@
     .ile-section{
       position:relative;overflow:hidden;
       padding:clamp(6rem,12vw,9rem) 0;
-      background:
-        linear-gradient(rgba(10,5,2,.75) 0%,rgba(10,5,2,.55) 50%,rgba(10,5,2,.8) 100%),
-        url('images/riz frit v3.webp') center/cover fixed
+      background:#0f0705
+    }
+    .ile-section-bg{
+      position:absolute;left:0;right:0;top:-12%;bottom:-12%;
+      background:url('images/riz frit v3.webp') center/cover no-repeat;
+      z-index:0;
+      will-change:transform;
+      transform:translate3d(0,0,0);
+      transition:transform .12s linear
+    }
+    .ile-section::before{
+      content:'';position:absolute;inset:0;
+      background:linear-gradient(rgba(10,5,2,.75) 0%,rgba(10,5,2,.55) 50%,rgba(10,5,2,.8) 100%);
+      z-index:1;pointer-events:none
     }
     .ile-section .container{position:relative;z-index:2}
     .ile-content{max-width:680px;margin:0 auto;text-align:center}
@@ -233,7 +245,7 @@
           <p class="section-label">Notre histoire</p>
           <h2 class="section-heading on-dark">Une cuisine portée<br/>par la <em>passion</em></h2>
           <p class="story-body">Le Palais Mauricien est né d'une conviction simple : la cuisine de l'Île Maurice mérite d'avoir sa place à La Réunion. Installés au coeur du Port, nous proposons chaque jour des recettes transmises de génération en génération, préparées avec les épices et les techniques authentiques de l'île soeur.</p>
-          <p class="story-body">Tout est <strong>préparé le jour même</strong>, avec des produits frais sélectionnés avec soin. Nos plats — du masalé cabri aux brochettes mauriciennes en passant par le halim — sont le fruit d'un travail quotidien, guidé par le respect des saveurs d'origine.</p>
+          <p class="story-body">Tout est <strong>préparé le jour même</strong>, avec des produits frais sélectionnés avec soin. Nos plats, du masalé cabri aux brochettes mauriciennes en passant par le halim, sont le fruit d'un travail quotidien, guidé par le respect des saveurs d'origine.</p>
           <p class="story-body">Notre cuisine est <strong>100% halal</strong>, certifiée, sans compromis. Parce que chaque client mérite de manger sereinement, en confiance.</p>
           <div class="story-signature">
             <img src="images/logo palaiiis.jpeg" alt="Palais Mauricien" class="story-signature-img" data-fb="hide"/>
@@ -274,7 +286,7 @@
             <svg viewBox="0 0 24 24" fill="none" width="20" height="20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           </div>
           <h3 class="valeur-title">Authenticité</h3>
-          <p class="valeur-desc">Nos recettes viennent directement de l'Île Maurice. Les épices, les techniques, les dosages — rien n'est simplifié pour le marché local. La vraie cuisine mauricienne, ici à La Réunion.</p>
+          <p class="valeur-desc">Nos recettes viennent directement de l'Île Maurice. Les épices, les techniques, les dosages : rien n'est simplifié pour le marché local. La vraie cuisine mauricienne, ici à La Réunion.</p>
         </div>
         <div class="valeur-item reveal-up" data-delay="0.2">
           <span class="valeur-num">03</span>
@@ -290,11 +302,12 @@
 
   <!-- L'ÎLE MAURICE -->
   <section class="ile-section">
+    <div class="ile-section-bg" data-parallax></div>
     <div class="container">
       <div class="ile-content">
         <p class="section-label">L'île soeur</p>
         <h2 class="section-heading centered on-dark">La cuisine de<br/><em>l'Île Maurice</em></h2>
-        <p class="ile-body">Maurice et La Réunion partagent une histoire, une géographie et des saveurs. La cuisine mauricienne est un mélange unique d'influences indiennes, créoles, chinoises et françaises — des épices chaudes comme le masalé, des marinades profondes comme le vinday, des plats mijotés lentement comme le halim.</p>
+        <p class="ile-body">Maurice et La Réunion partagent une histoire, une géographie et des saveurs. La cuisine mauricienne est un mélange unique d'influences indiennes, créoles, chinoises et françaises : des épices chaudes comme le masalé, des marinades profondes comme le vinday, des plats mijotés lentement comme le halim.</p>
         <p class="ile-body">Nous portons ces traditions avec fierté, convaincu que ces saveurs ont toute leur place dans les assiettes réunionnaises.</p>
         <a href="menu.html" class="btn-gold">Découvrir notre menu</a>
       </div>
@@ -306,7 +319,7 @@
     <div class="container">
       <div class="section-header centered-block reveal-up">
         <p class="section-label">En chiffres</p>
-        <h2 class="section-heading centered">Le Palais en <em>quelques mots</em></h2>
+        <h2 class="section-heading centered on-dark">Le Palais en <em>quelques mots</em></h2>
       </div>
       <div class="chiffres-grid">
         <div class="chiffre-item reveal-up" data-delay="0.05">
@@ -386,8 +399,8 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase-client.js?v=4"></script>
-  <script src="data.js?v=8"></script>
-  <script src="main.js?v=8"></script>
+  <script src="supabase-client.js?v=6"></script>
+  <script src="data.js?v=10"></script>
+  <script src="main.js?v=11"></script>
 </body>
 </html>

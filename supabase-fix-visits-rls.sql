@@ -1,5 +1,5 @@
 -- ============================================================
--- FIX RLS — table visits (Palais Mauricien)
+-- FIX RLS - table visits (Palais Mauricien)
 -- À exécuter UNE FOIS dans Supabase Studio → SQL Editor
 -- ============================================================
 -- Problème détecté lors de l'audit du 2026-05-03 :
@@ -36,7 +36,7 @@ TO authenticated
 USING (true);
 
 -- ============================================================
--- VÉRIFICATION (optionnel) — exécuter après les CREATE POLICY
+-- VÉRIFICATION (optionnel) - exécuter après les CREATE POLICY
 -- ============================================================
 -- SELECT polname, cmd, roles, qual, with_check
 -- FROM pg_policies

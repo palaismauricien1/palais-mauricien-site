@@ -4,7 +4,7 @@ Disallow: /admin.html
 Disallow: /admin.css
 Disallow: /admin.js
 
-# Bots IA / réponses générées — autorisation explicite
+# Bots IA / réponses générées - autorisation explicite
 User-agent: GPTBot
 Allow: /
 Disallow: /admin.html

@@ -1,5 +1,5 @@
 /* ============================================================
-   PALAIS MAURICIEN — Admin CSS
+   PALAIS MAURICIEN - Admin CSS
    ============================================================ */
 :root {
   --bg:        #0d0603;
@@ -32,7 +32,7 @@ button{cursor:pointer;border:none;font-family:inherit}
 input,textarea,select{font-family:inherit}
 a{text-decoration:none}
 
-/* ——— LOGIN ——— */
+/* --- LOGIN --- */
 .login-screen{
   min-height:100vh;display:flex;align-items:center;justify-content:center;
   background:var(--bg);
@@ -87,7 +87,7 @@ a{text-decoration:none}
 }
 .login-error.visible{display:block}
 
-/* ——— BUTTONS ——— */
+/* --- BUTTONS --- */
 .btn-primary{
   display:inline-flex;align-items:center;gap:6px;
   padding:13px 24px;
@@ -130,11 +130,11 @@ a{text-decoration:none}
 .btn-icon:hover{border-color:var(--border-s);color:var(--primary)}
 .btn-icon.danger:hover{border-color:rgba(224,82,82,.3);color:var(--danger)}
 
-/* ——— LAYOUT ——— */
+/* --- LAYOUT --- */
 .hidden{display:none!important}
 .admin-app{display:flex;min-height:100vh}
 
-/* ——— SIDEBAR ——— */
+/* --- SIDEBAR --- */
 .sidebar{
   width:220px;flex-shrink:0;
   background:var(--surface);
@@ -181,7 +181,7 @@ a{text-decoration:none}
 .logout-btn svg{width:13px;height:13px}
 .logout-btn:hover{color:var(--danger)}
 
-/* ——— MAIN ——— */
+/* --- MAIN --- */
 .admin-main{flex:1;display:flex;flex-direction:column;overflow:auto;background:var(--bg)}
 .admin-header{
   display:flex;align-items:center;justify-content:space-between;
@@ -196,7 +196,7 @@ a{text-decoration:none}
 .page{display:none;padding:24px 28px;flex:1}
 .page.active{display:block}
 
-/* ——— DASHBOARD ——— */
+/* --- DASHBOARD --- */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
 .stat-card{
   padding:18px 16px;
@@ -254,7 +254,7 @@ a{text-decoration:none}
 .info-line span{color:var(--muted)}
 .info-line strong{color:var(--text);font-weight:500}
 
-/* ——— MENU PAGE ——— */
+/* --- MENU PAGE --- */
 .menu-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .cat-tabs{display:flex;gap:0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
 .cat-tab{
@@ -296,7 +296,7 @@ a{text-decoration:none}
 .toggle.on::after{transform:translateX(15px);background:var(--primary)}
 .item-actions{display:flex;gap:5px}
 
-/* ——— HOURS PAGE ——— */
+/* --- HOURS PAGE --- */
 .hours-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
 .hour-card{
   background:var(--surface);border:1px solid var(--border);
@@ -322,7 +322,7 @@ a{text-decoration:none}
 .hour-inputs.disabled{opacity:.3;pointer-events:none}
 .save-confirm{margin-top:10px;font-size:.68rem;color:var(--success);letter-spacing:.08em}
 
-/* ——— SETTINGS PAGE ——— */
+/* --- SETTINGS PAGE --- */
 .settings-card{
   background:var(--surface);border:1px solid var(--border);
   padding:22px;margin-bottom:16px;
@@ -331,7 +331,7 @@ a{text-decoration:none}
 .settings-card h3{font-family:var(--font-d);font-size:.92rem;color:var(--text);margin-bottom:18px}
 .settings-card .btn-primary{width:auto;margin-top:10px}
 
-/* ——— FORM ——— */
+/* --- FORM --- */
 .form-group{margin-bottom:14px}
 .form-group label{
   display:block;font-size:.62rem;color:var(--muted);
@@ -352,7 +352,7 @@ a{text-decoration:none}
 .img-preview-wrap{margin-top:8px}
 .img-preview-wrap img{max-height:90px;object-fit:cover;border-radius:2px}
 
-/* ——— MODAL ——— */
+/* --- MODAL --- */
 .modal-overlay{
   position:fixed;inset:0;background:rgba(0,0,0,.75);
   z-index:999;display:flex;align-items:center;justify-content:center;padding:20px;
@@ -370,7 +370,7 @@ a{text-decoration:none}
 .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
 .modal-actions .btn-primary{width:auto}
 
-/* ——— PLATS DU JOUR ——— */
+/* --- PLATS DU JOUR --- */
 .dispo-header{
   display:flex;justify-content:space-between;align-items:flex-end;
   gap:18px;flex-wrap:wrap;
@@ -436,7 +436,7 @@ a{text-decoration:none}
 .dispo-count{font-size:.72rem;color:var(--text-2);letter-spacing:.04em}
 .dispo-bar .btn-primary{width:auto}
 
-/* ——— BURGER & BACKDROP ——— */
+/* --- BURGER & BACKDROP --- */
 .burger-btn{
   display:none;
   width:40px;height:40px;
@@ -465,7 +465,7 @@ a{text-decoration:none}
 }
 .sidebar-backdrop.visible{opacity:1}
 
-/* ——— RESPONSIVE TABLET ≤900 ——— */
+/* --- RESPONSIVE TABLET ≤900 --- */
 @media(max-width:900px){
   .burger-btn{display:flex}
   .sidebar-backdrop.visible{display:block}
@@ -500,13 +500,13 @@ a{text-decoration:none}
   .admin-header{padding:12px 14px;gap:10px}
   .admin-header h2{font-size:1.05rem;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .dispo-header{flex-direction:column;align-items:stretch;padding:14px 16px}
-  .dispo-row{grid-template-columns:42px 1fr 44px;gap:10px;padding:10px 10px}
+  .dispo-row{grid-template-columns:42px 1fr auto 44px;gap:10px;padding:10px 10px}
   .dispo-price{display:none}
   .dispo-bar{flex-direction:column;gap:10px;align-items:stretch;text-align:center}
   .dispo-bar .btn-primary{width:100%}
 }
 
-/* ——— RESPONSIVE MOBILE ≤600 ——— */
+/* --- RESPONSIVE MOBILE ≤600 --- */
 @media(max-width:600px){
   html{font-size:14px}
   .login-box{width:100%;max-width:380px;padding:42px 28px 34px}
@@ -583,7 +583,7 @@ a{text-decoration:none}
   .hour-inputs{gap:10px}
   .hour-inputs input{padding:11px 10px;font-size:.95rem;min-height:42px}
   .hour-day{font-size:.78rem}
-  .dispo-row{grid-template-columns:54px 1fr 48px;gap:12px;padding:10px;min-height:60px}
+  .dispo-row{grid-template-columns:54px 1fr auto 48px;gap:12px;padding:10px;min-height:60px}
   .dispo-img{width:54px;height:54px}
   .dispo-name{font-size:.92rem}
   .dispo-desc{font-size:.7rem;white-space:normal;overflow:visible;text-overflow:initial;line-height:1.4}
@@ -602,7 +602,7 @@ a{text-decoration:none}
   .info-line strong{font-weight:600}
 }
 
-/* ——— RESPONSIVE SMALL ≤380 ——— */
+/* --- RESPONSIVE SMALL ≤380 --- */
 @media(max-width:380px){
   .stats-row{grid-template-columns:1fr}
   .sidebar{width:88vw;max-width:280px}
@@ -612,7 +612,7 @@ a{text-decoration:none}
   .btn-outline{padding:8px 10px;font-size:.58rem;letter-spacing:.06em}
 }
 
-/* ——— VARIANTES ——— */
+/* --- VARIANTES --- */
 .item-price-variants{
   display:flex;flex-direction:column;gap:2px;text-align:right;
   font-family:var(--font-d);font-size:.75rem;color:var(--primary);font-weight:700
@@ -633,7 +633,7 @@ a{text-decoration:none}
 }
 .btn-icon.disabled:hover{background:transparent}
 
-/* ——— FERMETURES EXCEPTIONNELLES ——— */
+/* --- FERMETURES EXCEPTIONNELLES --- */
 .closures-list{display:flex;flex-direction:column;gap:10px}
 .closure-row{
   display:flex;align-items:center;justify-content:space-between;
@@ -657,7 +657,7 @@ a{text-decoration:none}
   text-transform:uppercase;color:var(--muted);margin-top:4px;
 }
 
-/* ——— Quantité restante par plat (page Plats du jour) ——— */
+/* --- Quantité restante par plat (page Plats du jour) --- */
 .dispo-remaining-wrap{
   display:inline-flex;align-items:center;gap:.32rem;
   margin-right:.7rem;flex-shrink:0;white-space:nowrap

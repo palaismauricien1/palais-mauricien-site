@@ -1,5 +1,5 @@
 /* ============================================================
-   PALAIS MAURICIEN — admin.js
+   PALAIS MAURICIEN - admin.js
    ============================================================ */
 
 // ===== IMAGE FALLBACK GLOBAL (remplace `onerror=` inline bloqués par la CSP) =====
@@ -7,8 +7,35 @@ document.addEventListener('error', e => {
   const t = e.target;
   if (!t || t.tagName !== 'IMG' || t.dataset.fbDone) return;
   t.dataset.fbDone = '1';
+  console.warn('[admin] image fallback applied for:', t.getAttribute('src'));
   t.src = 'images/logo.png';
 }, true);
+
+// ===== TOAST UTILITY =====
+function showToast(message, type = 'info') {
+  let host = document.getElementById('admToastHost');
+  if (!host) {
+    host = document.createElement('div');
+    host.id = 'admToastHost';
+    host.style.cssText = 'position:fixed;top:18px;right:18px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none';
+    document.body.appendChild(host);
+  }
+  const el = document.createElement('div');
+  const bg = type === 'error' ? '#7c1f1f' : type === 'success' ? '#1f5f3c' : '#2a2118';
+  const fg = '#f3e9d5';
+  el.style.cssText = `background:${bg};color:${fg};padding:12px 18px;border-radius:6px;font-family:system-ui,sans-serif;font-size:.9rem;box-shadow:0 6px 20px rgba(0,0,0,.45);max-width:340px;line-height:1.4;pointer-events:auto;animation:fadeInToast .25s ease`;
+  el.textContent = message;
+  host.appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .25s'; }, 3500);
+  setTimeout(() => el.remove(), 3800);
+}
+
+// Wrapper : sauvegarde + feedback en cas d'échec. À utiliser à la place de saveData() direct.
+async function safeSave(d) {
+  const ok = await saveData(d);
+  if (!ok) showToast('Sauvegarde impossible - espace de stockage saturé. Réduisez la taille des images ou videz le cache.', 'error');
+  return ok;
+}
 
 // ===== LOGIN (Supabase Auth) =====
 let currentCat = 'plats';
@@ -172,6 +199,7 @@ function renderDispoPage() {
             const remVal = (item.remaining === 0 || item.remaining > 0) ? item.remaining : '';
             return `
             <label class="dispo-row" data-id="${item.id}" data-cat="${escAttr(c.key)}">
+              <input type="checkbox" class="dispo-check" data-id="${item.id}" data-cat="${escAttr(c.key)}" ${item.dispoToday ? 'checked' : ''}/>
               <img class="dispo-img" src="${escUrl(item.img)}" alt="${escAttr(item.name)}"/>
               <div class="dispo-info">
                 <div class="dispo-name">${escHtml(item.name)}</div>
@@ -181,11 +209,10 @@ function renderDispoPage() {
               <span class="dispo-remaining-wrap" title="Nombre de portions restantes (laisser vide pour ne pas afficher)">
                 <input type="number" min="0" step="1" inputmode="numeric"
                   class="dispo-remaining" data-id="${item.id}" data-cat="${escAttr(c.key)}"
-                  placeholder="—" value="${escAttr(remVal)}"
+                  placeholder="-" value="${escAttr(remVal)}"
                   ${item.dispoToday ? '' : 'disabled'}/>
                 <span class="dispo-remaining-label">restants</span>
               </span>
-              <input type="checkbox" class="dispo-check" data-id="${item.id}" data-cat="${escAttr(c.key)}" ${item.dispoToday ? 'checked' : ''}/>
               <span class="dispo-toggle"></span>
             </label>
           `;}).join('')}
@@ -264,7 +291,8 @@ document.getElementById('saveDispoBtn')?.addEventListener('click', async () => {
       item.remaining = normalizeRemaining(qtyInput ? qtyInput.value : '');
     });
     d.dispoDate = getTodayKey();
-    saveData(d);
+    const saved = await saveData(d);
+    if (!saved) throw new Error('Sauvegarde refusée (stockage saturé ?)');
 
     msg.textContent = '✓ Sélection enregistrée';
     msg.classList.remove('hidden', 'error');
@@ -298,7 +326,7 @@ function renderMenuPage(cat) {
       ? `<span class="item-price item-price-variants">${item.variants.map(v => `<em>${escHtml(v.name)}</em>${escHtml(v.price)}`).join(' · ')}</span>`
       : `<span class="item-price">${escHtml(item.price || '')}</span>`;
     const editBtn = hasVariants
-      ? `<button class="btn-icon edit-btn disabled" data-id="${item.id}" title="Modification des variantes non supportée — éditer data.js" disabled>
+      ? `<button class="btn-icon edit-btn disabled" data-id="${item.id}" title="Modification des variantes non supportée - éditer data.js" disabled>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
         </button>`
       : `<button class="btn-icon edit-btn" data-id="${item.id}" title="Modifier">
@@ -331,11 +359,14 @@ function renderMenuPage(cat) {
 
   // Toggle visibility
   list.querySelectorAll('.toggle').forEach(tog => {
-    tog.addEventListener('click', () => {
+    tog.addEventListener('click', async () => {
       const id = parseInt(tog.dataset.id);
       const d = getData();
       const item = d.menu[currentCat].find(i => i.id === id);
-      if (item) { item.visible = !item.visible; saveData(d); renderMenuPage(); }
+      if (!item) return;
+      item.visible = !item.visible;
+      const ok = await safeSave(d);
+      if (ok) renderMenuPage();
     });
   });
 
@@ -346,11 +377,12 @@ function renderMenuPage(cat) {
 
   // Delete
   list.querySelectorAll('.delete-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', async () => {
       if (!confirm('Supprimer ce plat ?')) return;
       const d = getData();
       d.menu[currentCat] = d.menu[currentCat].filter(i => i.id !== parseInt(btn.dataset.id));
-      saveData(d); renderMenuPage();
+      const ok = await safeSave(d);
+      if (ok) renderMenuPage();
     });
   });
 }
@@ -401,28 +433,77 @@ document.getElementById('itemImgUrl')?.addEventListener('input', e => {
   else preview.style.display = 'none';
 });
 
-document.getElementById('itemImgFile')?.addEventListener('change', e => {
+// Compresse une image dans un canvas et retourne une Data URL JPEG (~70% qualité, max 1200px côté long).
+function compressImage(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        const MAX = 1200;
+        let { width: w, height: h } = img;
+        if (w > MAX || h > MAX) {
+          if (w >= h) { h = Math.round(h * MAX / w); w = MAX; }
+          else        { w = Math.round(w * MAX / h); h = MAX; }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        const isPng = file.type === 'image/png';
+        resolve(canvas.toDataURL(isPng ? 'image/png' : 'image/jpeg', 0.78));
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+document.getElementById('itemImgFile')?.addEventListener('change', async e => {
   const file = e.target.files[0];
   if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
+
+  // Validation taille (max 5 MB en entrée)
+  const MAX_INPUT = 5 * 1024 * 1024;
+  if (file.size > MAX_INPUT) {
+    showToast('Image trop lourde (max 5 Mo). Réduisez-la avant l\'upload.', 'error');
+    e.target.value = '';
+    return;
+  }
+  if (!/^image\//.test(file.type)) {
+    showToast('Format non supporté (jpg, png, webp uniquement).', 'error');
+    e.target.value = '';
+    return;
+  }
+
+  try {
+    const dataUrl = await compressImage(file);
+    // Vérifie que le résultat compressé est raisonnable (~700 KB max après base64)
+    if (dataUrl.length > 700_000) {
+      showToast('Image encore trop lourde après compression. Essayez une plus petite.', 'error');
+      e.target.value = '';
+      return;
+    }
     const preview = document.getElementById('imgPreview');
-    preview.src = ev.target.result;
+    preview.src = dataUrl;
     preview.style.display = 'block';
-    document.getElementById('itemImgUrl').value = ev.target.result;
-  };
-  reader.readAsDataURL(file);
+    document.getElementById('itemImgUrl').value = dataUrl;
+  } catch (err) {
+    console.error('[upload] compression failed:', err);
+    showToast('Impossible de lire cette image.', 'error');
+    e.target.value = '';
+  }
 });
 
 // Submit
-document.getElementById('itemForm')?.addEventListener('submit', e => {
+document.getElementById('itemForm')?.addEventListener('submit', async e => {
   e.preventDefault();
   const id = document.getElementById('itemId').value;
   const cat = document.getElementById('itemCat').value;
   const d = getData();
 
-  const newItem = {
-    id: id ? parseInt(id) : getNextId(d),
+  const editedFields = {
     name:    document.getElementById('itemName').value.trim(),
     desc:    document.getElementById('itemDesc').value.trim(),
     price:   document.getElementById('itemPrice').value.trim(),
@@ -432,12 +513,21 @@ document.getElementById('itemForm')?.addEventListener('submit', e => {
 
   if (id) {
     const idx = d.menu[cat].findIndex(i => i.id === parseInt(id));
-    if (idx !== -1) d.menu[cat][idx] = newItem;
+    if (idx !== -1) {
+      // Merge : on préserve dispoToday, remaining, variants et tout autre champ existant
+      d.menu[cat][idx] = { ...d.menu[cat][idx], ...editedFields };
+    }
   } else {
-    d.menu[cat].push(newItem);
+    d.menu[cat].push({
+      id: getNextId(d),
+      ...editedFields,
+      dispoToday: false,
+      remaining: null,
+    });
   }
 
-  saveData(d);
+  const ok = await safeSave(d);
+  if (!ok) return;
   closeModal();
   renderMenuPage();
 });
@@ -528,7 +618,7 @@ function renderHoursPage() {
   });
 }
 
-document.getElementById('saveHoursBtn')?.addEventListener('click', () => {
+document.getElementById('saveHoursBtn')?.addEventListener('click', async () => {
   const days = ['lundi','mardi','mercredi','jeudi','vendredi','samedi','dimanche'];
   const d = getData();
   days.forEach(key => {
@@ -546,7 +636,8 @@ document.getElementById('saveHoursBtn')?.addEventListener('click', () => {
       }
     };
   });
-  saveData(d);
+  const ok = await safeSave(d);
+  if (!ok) return;
   const c = document.getElementById('hoursSaved');
   c.classList.remove('hidden'); setTimeout(() => c.classList.add('hidden'), 2500);
 });
@@ -570,7 +661,7 @@ function renderClosuresPage() {
   list.innerHTML = sorted.map((c, i) => {
     const date = c.date || '';
     const isPast = date < todayKey;
-    const fmt = date ? new Date(date + 'T00:00').toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : '—';
+    const fmt = date ? new Date(date + 'T00:00').toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : '-';
     return `
       <div class="closure-row${isPast ? ' is-past' : ''}">
         <div>
@@ -585,18 +676,18 @@ function renderClosuresPage() {
   }).join('');
 
   list.querySelectorAll('.closure-del').forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', async () => {
       if (!confirm('Supprimer cette fermeture exceptionnelle ?')) return;
       const date = btn.dataset.date;
       const d2 = getData();
       d2.exceptionalClosures = (d2.exceptionalClosures || []).filter(c => c.date !== date);
-      saveData(d2);
-      renderClosuresPage();
+      const ok = await safeSave(d2);
+      if (ok) renderClosuresPage();
     });
   });
 }
 
-document.getElementById('addClosureBtn')?.addEventListener('click', () => {
+document.getElementById('addClosureBtn')?.addEventListener('click', async () => {
   const dateEl = document.getElementById('closureDate');
   const reasonEl = document.getElementById('closureReason');
   const date = dateEl?.value;
@@ -607,7 +698,8 @@ document.getElementById('addClosureBtn')?.addEventListener('click', () => {
   // Évite les doublons : remplace si la date existe déjà
   d.exceptionalClosures = d.exceptionalClosures.filter(c => c.date !== date);
   d.exceptionalClosures.push({ date, reason: (reasonEl?.value || '').trim() });
-  saveData(d);
+  const ok = await safeSave(d);
+  if (!ok) return;
 
   if (dateEl) dateEl.value = '';
   if (reasonEl) reasonEl.value = '';
@@ -624,12 +716,13 @@ function renderSettingsPage() {
   if (tiktokInput) tiktokInput.value = d.socials?.tiktok || '';
 }
 
-document.getElementById('saveTiktokBtn')?.addEventListener('click', () => {
+document.getElementById('saveTiktokBtn')?.addEventListener('click', async () => {
   const url = (document.getElementById('tiktokUrl')?.value || '').trim();
   const d = getData();
   if (!d.socials || typeof d.socials !== 'object') d.socials = {};
   d.socials.tiktok = url;
-  saveData(d);
+  const ok = await safeSave(d);
+  if (!ok) return;
   const msg = document.getElementById('tiktokSaved');
   msg?.classList.remove('hidden');
   setTimeout(() => msg?.classList.add('hidden'), 2000);

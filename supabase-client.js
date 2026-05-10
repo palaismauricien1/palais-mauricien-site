@@ -1,5 +1,5 @@
 /* ============================================================
-   SUPABASE CLIENT — Palais Mauricien
+   SUPABASE CLIENT - Palais Mauricien
    Initialise le client Supabase + helpers de sync cloud
    ============================================================ */
 
@@ -59,11 +59,23 @@ async function syncFromCloud() {
    VISIT TRACKING
    ============================================================ */
 
+/* Track visit - 1 seule par session navigateur (sessionStorage) ET au max 1 par 30 min
+   pour éviter les rafraîchissements F5 en boucle ou les bots qui ouvrent plusieurs onglets. */
 async function cloudTrackVisit() {
   try {
+    const KEY = 'pm_visit_tracked';
+    if (sessionStorage.getItem(KEY)) return; // déjà compté pour cette session
+    const last = parseInt(localStorage.getItem('pm_visit_last') || '0', 10);
+    const now = Date.now();
+    if (now - last < 30 * 60 * 1000) {
+      sessionStorage.setItem(KEY, '1');
+      return;
+    }
+    sessionStorage.setItem(KEY, '1');
+    localStorage.setItem('pm_visit_last', String(now));
     await SB.from('visits').insert({});
   } catch (e) {
-    // silent — pas grave si tracking rate
+    // silent - pas grave si tracking rate
   }
 }
 

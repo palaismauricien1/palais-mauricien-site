@@ -1,6 +1,6 @@
-# Palais Mauricien — Site web
+# Palais Mauricien - Site web
 
-Site officiel du restaurant **Palais Mauricien**, Le Port — La Réunion.
+Site officiel du restaurant **Palais Mauricien**, Le Port - La Réunion.
 
 🌐 [palaismauricien.re](https://palaismauricien.re)
 
@@ -48,7 +48,7 @@ Site officiel du restaurant **Palais Mauricien**, Le Port — La Réunion.
 URL : `/admin.html`
 
 Protection en deux couches :
-1. **Vercel Basic Auth** (couche serveur) — popup navigateur
+1. **Vercel Basic Auth** (couche serveur) - popup navigateur
 2. **Formulaire JS** (couche app)
 
 Mot de passe par défaut : voir documentation interne.
@@ -101,7 +101,7 @@ Puis ouvrir http://localhost:8000
 Les données admin sont stockées en **localStorage** côté navigateur. Conséquence :
 - Le client doit utiliser **toujours le même navigateur sur le même appareil** pour gérer le menu
 - Effacer les cookies/cache du navigateur efface les modifs
-- Pour une vraie persistance multi-appareils, ajouter un backend (Supabase, Firebase, etc.) — non implémenté
+- Pour une vraie persistance multi-appareils, ajouter un backend (Supabase, Firebase, etc.) - non implémenté
 
 ---
 

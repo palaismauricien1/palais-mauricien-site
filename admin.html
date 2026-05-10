@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin — Palais Mauricien</title>
+  <title>Admin - Palais Mauricien</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="admin.css?v=5"/>
+  <link rel="stylesheet" href="admin.css?v=7"/>
 </head>
 <body>
 
@@ -118,7 +118,7 @@
           </div>
         </div>
         <div class="chart-card">
-          <h3>Visites — 7 derniers jours</h3>
+          <h3>Visites - 7 derniers jours</h3>
           <div class="bar-chart" id="barChart"></div>
         </div>
         <div class="info-row">
@@ -130,12 +130,12 @@
           </div>
           <div class="info-card">
             <h3>Résumé menu</h3>
-            <div class="info-line"><span>Plats principaux</span><strong id="countPlats">—</strong></div>
-            <div class="info-line"><span>Street food</span><strong id="countStreet">—</strong></div>
-            <div class="info-line"><span>Grillades</span><strong id="countGrillades">—</strong></div>
-            <div class="info-line"><span>Desserts</span><strong id="countDesserts">—</strong></div>
-            <div class="info-line"><span>Boissons</span><strong id="countBoissons">—</strong></div>
-            <div class="info-line"><span>Disponibles aujourd'hui</span><strong id="countDispo">—</strong></div>
+            <div class="info-line"><span>Plats principaux</span><strong id="countPlats">-</strong></div>
+            <div class="info-line"><span>Street food</span><strong id="countStreet">-</strong></div>
+            <div class="info-line"><span>Grillades</span><strong id="countGrillades">-</strong></div>
+            <div class="info-line"><span>Desserts</span><strong id="countDesserts">-</strong></div>
+            <div class="info-line"><span>Boissons</span><strong id="countBoissons">-</strong></div>
+            <div class="info-line"><span>Disponibles aujourd'hui</span><strong id="countDispo">-</strong></div>
           </div>
         </div>
       </div>
@@ -159,8 +159,8 @@
       <div class="page" id="page-dispo">
         <div class="dispo-header">
           <div class="dispo-header-left">
-            <p class="dispo-date" id="dispoDate">—</p>
-            <p class="dispo-status" id="dispoStatus">—</p>
+            <p class="dispo-date" id="dispoDate">-</p>
+            <p class="dispo-status" id="dispoStatus">-</p>
           </div>
           <div class="dispo-header-actions">
             <button class="btn-ghost-dark" id="dispoCheckAllBtn">Tout cocher</button>
@@ -269,7 +269,7 @@
           <input type="text" id="itemPrice" placeholder="ex: 13,50 €" required/>
         </div>
         <div class="form-group">
-          <label>Image — URL ou chemin</label>
+          <label>Image - URL ou chemin</label>
           <input type="text" id="itemImgUrl" placeholder="images/mon-plat.png"/>
         </div>
         <div class="form-group">
@@ -290,8 +290,8 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase-client.js?v=4"></script>
-  <script src="data.js?v=8"></script>
-  <script src="admin.js?v=8"></script>
+  <script src="supabase-client.js?v=6"></script>
+  <script src="data.js?v=10"></script>
+  <script src="admin.js?v=11"></script>
 </body>
 </html>

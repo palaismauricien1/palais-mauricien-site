@@ -1,5 +1,5 @@
 /* ============================================================
-   PALAIS MAURICIEN — Design God Final
+   PALAIS MAURICIEN - Design God Final
    Typo: Playfair Display + Lora + DM Mono
    Palette: Deep Burgundy · Gold #D4A853 · Cream · Stone
    ============================================================ */
@@ -51,7 +51,7 @@ button{border:none;cursor:pointer;background:none;font-family:inherit}
 .cursor-follower.hovered{width:48px;height:48px;border-color:rgba(212,168,83,.7)}
 @media(hover:none){.cursor,.cursor-follower{display:none}}
 
-/* CTA FLOATS (Y aller / Commander) — verts élégants, fixes en bas */
+/* CTA FLOATS (Y aller / Commander) - verts élégants, fixes en bas */
 .maps-float{
   position:fixed;bottom:32px;left:32px;z-index:900;
   display:flex;align-items:center;gap:10px;
@@ -345,7 +345,7 @@ button{border:none;cursor:pointer;background:none;font-family:inherit}
 .galerie-section{background:var(--bg-3);padding:clamp(4rem,8vw,8rem) 0}
 .galerie-section .section-heading{color:var(--cream)}
 
-/* Masonry grid — 5 colonnes compact, style vrac */
+/* Masonry grid - 5 colonnes compact, style vrac */
 .masonry-grid{
   columns:5;
   column-gap:6px;
@@ -377,7 +377,7 @@ button{border:none;cursor:pointer;background:none;font-family:inherit}
   font-size:.72rem;font-style:italic;line-height:1.2;
 }
 
-/* Variants de tailles — effet vrac */
+/* Variants de tailles - effet vrac */
 .masonry-item img                    {aspect-ratio:1/1;object-fit:cover}   /* carré par défaut */
 .masonry-item.masonry-tall img       {aspect-ratio:2/3;object-fit:cover}   /* portrait */
 .masonry-item.masonry-squat img      {aspect-ratio:4/3;object-fit:cover}   /* paysage */
@@ -536,7 +536,7 @@ button{border:none;cursor:pointer;background:none;font-family:inherit}
   .btn-ghost{border-color:rgba(232,220,200,.25);color:rgba(232,220,200,.75)}
 }
 
-/* GRAIN TEXTURE — sections sombres */
+/* GRAIN TEXTURE - sections sombres */
 .menu-section,.galerie-section,.hero,.discover-section{position:relative}
 .menu-section::before,.galerie-section::before,.hero::before{
   content:'';position:absolute;inset:0;pointer-events:none;
@@ -545,7 +545,7 @@ button{border:none;cursor:pointer;background:none;font-family:inherit}
 }
 .menu-section .container,.galerie-section .container{position:relative;z-index:1}
 
-/* GOLD DIVIDER — ligne séparatrice premium */
+/* GOLD DIVIDER - ligne séparatrice premium */
 .gold-divider{
   height:1px;
   background:linear-gradient(90deg,transparent 0%,var(--primary) 25%,rgba(212,168,83,.6) 50%,var(--primary) 75%,transparent 100%);
@@ -568,7 +568,7 @@ button{border:none;cursor:pointer;background:none;font-family:inherit}
 .page-transition-overlay.fade-out{clip-path:inset(0 0% 0 0);pointer-events:all}
 
 /* ============================================================
-   NAVBAR MOBILE — slide animé
+   NAVBAR MOBILE - slide animé
    ============================================================ */
 @media(max-width:768px){
   .nav-links{
@@ -667,7 +667,7 @@ button{border:none;cursor:pointer;background:none;font-family:inherit}
 ::-webkit-scrollbar-thumb:hover{background:rgba(212,168,83,.6)}
 
 /* ============================================================
-   HERO FOOD DECORATION — photo flottante desktop
+   HERO FOOD DECORATION - photo flottante desktop
    ============================================================ */
 .hero-food-deco{
   position:absolute;
@@ -718,7 +718,7 @@ button{border:none;cursor:pointer;background:none;font-family:inherit}
 @media(max-width:900px){.hero-food-deco{display:none}}
 
 /* ============================================================
-   NAV ACTIVE STATE — par page
+   NAV ACTIVE STATE - par page
    ============================================================ */
 body[data-page="home"] .nav-link-home,
 body[data-page="menu"] .nav-link-menu,
@@ -727,7 +727,7 @@ body[data-page="about"] .nav-link-about,
 body[data-page="contact"] .nav-link-contact{color:var(--primary)!important}
 
 /* ============================================================
-   PAGE HERO — header compact pour les pages intérieures
+   PAGE HERO - header compact pour les pages intérieures
    ============================================================ */
 .page-hero{
   background:var(--bg);
@@ -773,7 +773,7 @@ body[data-page="contact"] .nav-link-contact{color:var(--primary)!important}
 }
 
 /* ============================================================
-   DISCOVER SECTION — teaser pages sur l'accueil
+   DISCOVER SECTION - teaser pages sur l'accueil
    ============================================================ */
 .discover-section{background:var(--bg);padding:clamp(6rem,12vw,11rem) 0 clamp(4rem,8vw,8rem)}
 .discover-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
@@ -837,7 +837,7 @@ body[data-page="contact"] .nav-link-contact{color:var(--primary)!important}
 }
 
 /* ============================================================
-   SECTION CTA STRIP — bande d'appel à l'action
+   SECTION CTA STRIP - bande d'appel à l'action
    ============================================================ */
 .cta-strip{
   background:
@@ -895,10 +895,10 @@ body[data-page="contact"] .nav-link-contact{color:var(--primary)!important}
 }
 
 /* ============================================================
-   REFONTE 2026 — Nouveaux composants & overrides
+   REFONTE 2026 - Nouveaux composants & overrides
    ============================================================ */
 
-/* Carousel de plats — bande défilante accueil */
+/* Carousel de plats - bande défilante accueil */
 .dish-carousel-section{overflow:hidden;background:var(--bg);padding:40px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
 .dish-carousel-track{display:flex;gap:0;width:max-content;animation:dishScroll 36s linear infinite}
 .dish-carousel-track:hover{animation-play-state:paused}
@@ -927,7 +927,7 @@ body[data-page="contact"] .nav-link-contact{color:var(--primary)!important}
 }
 .menu-carte-h1 em{color:var(--primary);font-style:italic}
 
-/* Onglets repensés — centrés, style pill-box */
+/* Onglets repensés - centrés, style pill-box */
 .menu-tabs{display:flex;justify-content:center;align-items:center;gap:0;margin:clamp(2rem,4vw,3rem) auto clamp(1.5rem,3vw,2.5rem);width:fit-content;border:1px solid var(--border-strong);background:rgba(212,168,83,.03);padding:3px}
 .tab-btn{padding:11px clamp(22px,4vw,44px);font-family:var(--font-mono);font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-muted);background:none;border:none;cursor:pointer;transition:color .25s,background .25s}
 .tab-btn.active{background:var(--primary);color:var(--text-dark);font-weight:700}
@@ -939,7 +939,7 @@ body[data-page="contact"] .nav-link-contact{color:var(--primary)!important}
 .menu-section.carte-mode{background:linear-gradient(rgba(15,7,5,.93),rgba(22,11,7,.92)),url('images/brochette de mauricien v2.webp') center/cover fixed;padding-top:0}
 .menu-section.carte-mode .container{padding-top:0}
 
-/* Items texte — liste style carte de restaurant */
+/* Items texte - liste style carte de restaurant */
 .menu-liste{display:flex;flex-direction:column}
 .menu-ligne{display:grid;grid-template-columns:1fr auto;padding:16px 0;border-bottom:1px solid rgba(212,168,83,.1);position:relative;transition:background .2s}
 .menu-ligne:hover{background:rgba(212,168,83,.03)}
@@ -952,7 +952,7 @@ body[data-page="contact"] .nav-link-contact{color:var(--primary)!important}
 .menu-photo-btn{width:32px;height:32px;border:1px solid var(--border-strong);display:flex;align-items:center;justify-content:center;color:var(--text-muted);background:none;cursor:pointer;flex-shrink:0;transition:border-color .25s,color .25s,background .25s}
 .menu-photo-btn:hover{border-color:var(--primary);color:var(--primary);background:rgba(212,168,83,.07)}
 
-/* Lightbox plat — menu */
+/* Lightbox plat - menu */
 .menu-lb-overlay{
   position:fixed;inset:0;z-index:9500;
   background:rgba(0,0,0,.88);
@@ -1017,7 +1017,7 @@ body[data-page="contact"] .nav-link-contact{color:var(--primary)!important}
   .menu-lb-img-wrap img{min-height:220px;max-height:240px}
 }
 
-/* Galerie sans page hero — padding top pour navbar fixe */
+/* Galerie sans page hero - padding top pour navbar fixe */
 body[data-page="galerie"] .galerie-section{padding-top:clamp(5.5rem,10vw,7rem)}
 .galerie-header{text-align:center;margin-bottom:clamp(1rem,2.5vw,1.8rem)}
 .galerie-titre{font-family:var(--font-display);font-size:clamp(1.8rem,4.5vw,3.2rem);font-weight:700;color:var(--cream);letter-spacing:-.03em;line-height:1.05}
@@ -1026,7 +1026,7 @@ body[data-page="galerie"] .galerie-section{padding-top:clamp(5.5rem,10vw,7rem)}
 /* Gallery filter compact */
 .gal-filter{flex-shrink:0;font-size:.7rem;padding:6px 16px;letter-spacing:.08em}
 
-/* Masonry — hauteurs plus variées (override des classes déjà définies plus haut) */
+/* Masonry - hauteurs plus variées (override des classes déjà définies plus haut) */
 
 /* Stats responsive mobile */
 @media(max-width:580px){
@@ -1049,10 +1049,10 @@ body[data-page="galerie"] .galerie-section{padding-top:clamp(5.5rem,10vw,7rem)}
 .discover-card-content p{color:rgba(232,220,200,.8)}
 .discover-arrow{opacity:1;transform:translateY(0)}
 
-/* Fix overflow boutons flottants — masquer le ::after qui déborde */
+/* Fix overflow boutons flottants - masquer le ::after qui déborde */
 .call-float,.maps-float{overflow:hidden}
 
-/* Discover cards — hauteur réduite desktop */
+/* Discover cards - hauteur réduite desktop */
 @media(min-width:769px){
   .discover-card{
     aspect-ratio:unset;
@@ -1061,7 +1061,7 @@ body[data-page="galerie"] .galerie-section{padding-top:clamp(5.5rem,10vw,7rem)}
 }
 
 /* ============================================================
-   STATS ALIGNMENT — stat-num-row pour aligner nombre + suffixe
+   STATS ALIGNMENT - stat-num-row pour aligner nombre + suffixe
    ============================================================ */
 .stat-num-row{
   display:flex;
@@ -1082,7 +1082,7 @@ body[data-page="galerie"] .galerie-section{padding-top:clamp(5.5rem,10vw,7rem)}
 }
 
 /* ============================================================
-   HERO TEXT — tout en blanc (gris illisible sur photo)
+   HERO TEXT - tout en blanc (gris illisible sur photo)
    ============================================================ */
 .hero-subtitle{color:rgba(255,255,255,.88)!important}
 .hero-eyebrow{-webkit-text-fill-color:rgba(255,255,255,.75)!important}
@@ -1095,7 +1095,7 @@ body[data-page="galerie"] .galerie-section{padding-top:clamp(5.5rem,10vw,7rem)}
 .hero-badges .badge{color:rgba(255,255,255,.7)!important;border-color:rgba(255,255,255,.2)!important}
 
 /* ============================================================
-   NAV FONT — passer de DM Mono à Lora (moins IA)
+   NAV FONT - passer de DM Mono à Lora (moins IA)
    ============================================================ */
 .nav-links a{
   font-family:var(--font-body)!important;
@@ -1107,7 +1107,7 @@ body[data-page="galerie"] .galerie-section{padding-top:clamp(5.5rem,10vw,7rem)}
 }
 
 /* ============================================================
-   CHIFFRES — lining-nums sur Playfair + stat en Lora
+   CHIFFRES - lining-nums sur Playfair + stat en Lora
    ============================================================ */
 .stat-num{
   font-family:var(--font-body)!important;
@@ -1120,7 +1120,7 @@ body[data-page="galerie"] .galerie-section{padding-top:clamp(5.5rem,10vw,7rem)}
 h1,h2,h3,h4{font-variant-numeric:lining-nums tabular-nums}
 
 /* ============================================================
-   HERO REFONTE — Photo + centré + rating + avantages + carousel
+   HERO REFONTE - Photo + centré + rating + avantages + carousel
    ============================================================ */
 
 /* Fond photo mobile par défaut */
@@ -1142,7 +1142,7 @@ h1,h2,h3,h4{font-variant-numeric:lining-nums tabular-nums}
 /* Masquer le watermark île Maurice + orbes sur le hero (photo suffit) */
 .hero-isle,.hero-orb-1,.hero-orb-2,.hero-grain{display:none!important}
 
-/* Contenu centré — toutes tailles */
+/* Contenu centré - toutes tailles */
 .hero-content{margin:0 auto!important;text-align:center!important;max-width:860px}
 .hero-title{align-items:center!important}
 .hero-actions,.hero-rating,.hero-badges{justify-content:center!important}
@@ -1153,7 +1153,7 @@ h1,h2,h3,h4{font-variant-numeric:lining-nums tabular-nums}
 /* Masquer photo déco */
 .hero-food-deco{display:none!important}
 
-/* Hero rating redesign — sans boîte */
+/* Hero rating redesign - sans boîte */
 .hero-rating{
   background:none;border:none;width:auto;padding:0;
   gap:10px;flex-wrap:wrap;margin-bottom:24px;align-items:center
@@ -1167,7 +1167,7 @@ h1,h2,h3,h4{font-variant-numeric:lining-nums tabular-nums}
 .rating-sep{color:rgba(212,168,83,.3);font-size:.7rem}
 .rating-count{font-family:var(--font-mono);font-size:.6rem;color:rgba(232,220,200,.42);letter-spacing:.1em}
 
-/* Réassurance hero — ligne légère */
+/* Réassurance hero - ligne légère */
 .hero-reassurance{
   font-family:var(--font-mono);
   font-size:.82rem;
@@ -1193,7 +1193,7 @@ h1,h2,h3,h4{font-variant-numeric:lining-nums tabular-nums}
 }
 
 /* ============================================================
-   FOOD CAROUSEL — Photo carousel Embla-style, grand format
+   FOOD CAROUSEL - Photo carousel Embla-style, grand format
    ============================================================ */
 .food-carousel-section{
   position:relative;
@@ -1282,7 +1282,7 @@ h1,h2,h3,h4{font-variant-numeric:lining-nums tabular-nums}
 }
 
 /* ============================================================
-   COMMENT COMMANDER — 3 étapes, fond sombre
+   COMMENT COMMANDER - 3 étapes, fond sombre
    ============================================================ */
 .commander-section{
   background:var(--bg);
@@ -1360,10 +1360,10 @@ h1,h2,h3,h4{font-variant-numeric:lining-nums tabular-nums}
 }
 
 /* ============================================================
-   AVIS GOOGLE — cartes blanches premium
+   AVIS GOOGLE - cartes blanches premium
    ============================================================ */
 /* ============================================================
-   AVIS GOOGLE — fond blanc, cartes crème premium
+   AVIS GOOGLE - fond blanc, cartes crème premium
    ============================================================ */
 .avis-section{
   background:#ffffff;
@@ -1381,7 +1381,7 @@ h1,h2,h3,h4{font-variant-numeric:lining-nums tabular-nums}
   gap:1.25rem;
   margin:1.75rem 0 1.5rem;
 }
-/* CARROUSEL AVIS — un seul à la fois, flèches + dots */
+/* CARROUSEL AVIS - un seul à la fois, flèches + dots */
 .avis-carousel{
   position:relative;
   margin:1.75rem auto 1rem;
@@ -1537,7 +1537,7 @@ h1,h2,h3,h4{font-variant-numeric:lining-nums tabular-nums}
 }
 
 /* ============================================================
-   ABOUT FEATURES — liste élégante avec coches
+   ABOUT FEATURES - liste élégante avec coches
    ============================================================ */
 .about-features{
   list-style:none;padding:0;margin:0;
@@ -1566,22 +1566,27 @@ h1,h2,h3,h4{font-variant-numeric:lining-nums tabular-nums}
 }
 
 /* ============================================================
-   COMMANDER SECTION — image de fond
+   COMMANDER SECTION - image de fond
    ============================================================ */
 .commander-section{
-  background-image:
+  position:relative;
+  overflow:hidden;
+  background:#0a0402;
+}
+.commander-bg{
+  position:absolute;left:0;right:0;top:-12%;bottom:-12%;
+  background:
     linear-gradient(to bottom,rgba(10,4,2,.92) 0%,rgba(10,4,2,.88) 50%,rgba(10,4,2,.94) 100%),
-    url('images/brochette de mauricien v2.webp');
-  background-size:cover;
-  background-position:center;
-  background-attachment:fixed;
+    url('images/brochette de mauricien v2.webp') center/cover no-repeat;
+  z-index:0;
+  will-change:transform;
+  transform:translate3d(0,0,0);
+  transition:transform .12s linear;
 }
-@media(max-width:768px){
-  .commander-section{background-attachment:scroll}
-}
+.commander-section > .container{position:relative;z-index:1}
 
 /* ============================================================
-   FOOD CAROUSEL — boutons plus visibles + auto-scroll
+   FOOD CAROUSEL - boutons plus visibles + auto-scroll
    ============================================================ */
 .food-carousel-btn{
   width:56px;height:56px;
@@ -1606,7 +1611,7 @@ h1,h2,h3,h4{font-variant-numeric:lining-nums tabular-nums}
   .food-carousel-btn svg{width:20px;height:20px}
 }
 
-/* Auto-scroll continu — animation marquee */
+/* Auto-scroll continu - animation marquee */
 .food-carousel-track.is-marquee{
   animation:foodMarquee 60s linear infinite;
   transform:none!important;
@@ -1619,7 +1624,7 @@ h1,h2,h3,h4{font-variant-numeric:lining-nums tabular-nums}
 }
 
 /* ============================================================
-   DISPONIBLE AUJOURD'HUI — page front
+   DISPONIBLE AUJOURD'HUI - page front
    ============================================================ */
 body[data-page="dispo"] .nav-link-dispo{color:var(--primary)!important}
 .dispo-section{
@@ -1725,7 +1730,7 @@ body[data-page="dispo"] .nav-link-dispo{color:var(--primary)!important}
 }
 
 /* ============================================================
-   HOMEPAGE — section "Aujourd'hui à la carte"
+   HOMEPAGE - section "Aujourd'hui à la carte"
    ============================================================ */
 .today-section{
   background:var(--bg-2);padding:clamp(4rem,8vw,7rem) 0;
@@ -1785,7 +1790,7 @@ body[data-page="dispo"] .nav-link-dispo{color:var(--primary)!important}
 }
 
 /* ============================================================
-   MENU — variantes (Riz frit, Roti, Mine bouille...)
+   MENU - variantes (Riz frit, Roti, Mine bouille...)
    ============================================================ */
 .menu-ligne{grid-template-columns:1fr auto auto;gap:12px}
 .menu-ligne-droite-variants{
@@ -1816,7 +1821,7 @@ body[data-page="dispo"] .nav-link-dispo{color:var(--primary)!important}
 }
 
 /* ============================================================
-   MOBILE FIXES — passe finale (≤600 / ≤480 / ≤380)
+   MOBILE FIXES - passe finale (≤600 / ≤480 / ≤380)
    ============================================================ */
 
 /* Galerie : 2 colonnes sur petit mobile, plus respirable */
@@ -1893,7 +1898,7 @@ img,video,svg{max-width:100%}
 }
 
 /* ============================================================
-   MENU PAGE — fix critique tabs catégories tronquées
+   MENU PAGE - fix critique tabs catégories tronquées
    ============================================================ */
 @media(max-width:900px){
   .menu-tabs{
@@ -1928,13 +1933,13 @@ img,video,svg{max-width:100%}
   .tab-lbl-short{display:inline}
 }
 
-/* Photo button — taille tactile sur mobile */
+/* Photo button - taille tactile sur mobile */
 @media(max-width:768px){
   .menu-photo-btn{width:44px;height:44px}
   .menu-photo-btn svg{width:16px;height:16px}
 }
 
-/* Menu lignes — typo plus lisible sur mobile + variantes propres */
+/* Menu lignes - typo plus lisible sur mobile + variantes propres */
 @media(max-width:600px){
   .menu-ligne-nom{font-size:1.02rem;line-height:1.25;margin-bottom:5px}
   .menu-ligne-desc{font-size:.84rem;line-height:1.55;color:rgba(232,220,200,.72)}
@@ -1942,7 +1947,7 @@ img,video,svg{max-width:100%}
   .menu-ligne{padding:16px 0;gap:10px}
   .menu-ligne-gauche{padding-right:6px}
   .menu-ligne-droite{padding-left:6px;gap:8px}
-  /* Variantes — bloc propre sous le nom */
+  /* Variantes - bloc propre sous le nom */
   .menu-ligne--variants .menu-ligne-droite-variants{
     margin-top:10px;
     padding:8px 10px;
@@ -1961,7 +1966,7 @@ img,video,svg{max-width:100%}
 }
 
 /* ============================================================
-   GALERIE — flèches lightbox plus loin des bords + masonry plus aéré
+   GALERIE - flèches lightbox plus loin des bords + masonry plus aéré
    ============================================================ */
 @media(max-width:600px){
   .masonry-grid{column-gap:8px}
@@ -1973,7 +1978,7 @@ img,video,svg{max-width:100%}
 }
 
 /* ============================================================
-   CONTACT — map iframe avec hauteur stable
+   CONTACT - map iframe avec hauteur stable
    ============================================================ */
 @media(max-width:768px){
   .map-wrap{height:auto;aspect-ratio:4/3;min-height:280px}
@@ -1983,7 +1988,7 @@ img,video,svg{max-width:100%}
 }
 
 /* ============================================================
-   HOMEPAGE — today cards lisibles sur 320px
+   HOMEPAGE - today cards lisibles sur 320px
    ============================================================ */
 @media(max-width:380px){
   .today-grid{grid-template-columns:1fr;gap:.75rem}
@@ -1993,7 +1998,7 @@ img,video,svg{max-width:100%}
 }
 
 /* ============================================================
-   ABOUT — about-stats lisibles entre 600-900px
+   ABOUT - about-stats lisibles entre 600-900px
    ============================================================ */
 @media(max-width:768px) and (min-width:600px){
   .about-stats{flex-wrap:wrap}
@@ -2001,7 +2006,7 @@ img,video,svg{max-width:100%}
 }
 
 /* ============================================================
-   NAVBAR — décaler la sticky-tab du menu sous la navbar
+   NAVBAR - décaler la sticky-tab du menu sous la navbar
    ============================================================ */
 @media(max-width:600px){
   .navbar{padding:8px 0}

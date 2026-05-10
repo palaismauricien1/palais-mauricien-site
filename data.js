@@ -1,5 +1,5 @@
 /* ============================================================
-   PALAIS MAURICIEN — Données par défaut + helpers localStorage
+   PALAIS MAURICIEN - Données par défaut + helpers localStorage
    ============================================================ */
 
 const MENU_CATS = [
@@ -22,16 +22,16 @@ const DEFAULT_DATA = {
           { name: "Végétarien", price: "7 €" }
         ] },
       { id: 2, name: "Sauté poulet fumé",
-        desc: "Poulet fumé sauté à la créole — goût intense et authentique.",
+        desc: "Poulet fumé sauté à la créole - goût intense et authentique.",
         price: "8 €", img: "images/sauté poulet fumé v2.webp", visible: true, dispoToday: false },
       { id: 3, name: "Sauté poulet au Bred",
         desc: "Poulet aux breds frais, parfumé aux épices locales.",
         price: "8 €", img: "images/sauté poulet au bred v3.webp", visible: true, dispoToday: false },
       { id: 4, name: "Masalé cabri",
-        desc: "Cabri mijoté lentement au massalé — la recette emblématique de l'Île Maurice.",
+        desc: "Cabri mijoté lentement au massalé - la recette emblématique de l'Île Maurice.",
         price: "9 €", img: "images/massalé cabri v2.webp", visible: true, dispoToday: false },
       { id: 5, name: "Vinday poisson",
-        desc: "Poisson mariné au vinaigre, curcuma et moutarde — un classique mauricien.",
+        desc: "Poisson mariné au vinaigre, curcuma et moutarde - un classique mauricien.",
         price: "9 €", img: "images/vinday poisson v2.webp", visible: true, dispoToday: false },
       { id: 6, name: "Daube poulet pomme de terre",
         desc: "Daube créole au poulet et pommes de terre, mijotée aux épices douces.",
@@ -101,15 +101,15 @@ const DEFAULT_DATA = {
     samedi:   { closed: false, midi: { actif: true,  open: "10:30", close: "14:30" }, soir: { actif: true,  open: "18:30", close: "21:30" } },
     dimanche: { closed: true,  midi: { actif: false, open: "10:30", close: "14:30" }, soir: { actif: false, open: "18:30", close: "21:30" } }
   },
-  // Réseaux sociaux — modifiables depuis l'admin (Paramètres)
+  // Réseaux sociaux - modifiables depuis l'admin (Paramètres)
   socials: {
     tiktok: "https://www.tiktok.com/@palaismauricien97420?_r=1&_t=ZN-96DznweiNwE"
   },
-  // Fermetures exceptionnelles (jours ponctuels) — gérées depuis l'admin
+  // Fermetures exceptionnelles (jours ponctuels) - gérées depuis l'admin
   // Format : tableau de chaînes "YYYY-MM-DD"
   exceptionalClosures: []
   // L'authentification admin est gérée par Supabase Auth (cf. supabase-client.js).
-  // Aucun mot de passe ne doit figurer dans ce fichier — il est servi en clair.
+  // Aucun mot de passe ne doit figurer dans ce fichier - il est servi en clair.
 };
 
 /* ---- Helper anti-XSS ---- */
@@ -193,12 +193,27 @@ function getData() {
   return JSON.parse(JSON.stringify(DEFAULT_DATA));
 }
 
-function saveData(data) {
-  localStorage.setItem('pm_data', JSON.stringify(data));
-  // Push to cloud (Supabase) — async fire-and-forget
-  if (typeof window.cloudSaveConfig === 'function') {
-    window.cloudSaveConfig(data);
+/* Sauvegarde locale + cloud. Retourne true si OK, false sinon.
+   Échec possible : QuotaExceededError (mode privé, stockage plein,
+   image base64 trop grosse). On notifie l'appelant pour qu'il affiche un toast. */
+async function saveData(data) {
+  let localOk = false;
+  try {
+    localStorage.setItem('pm_data', JSON.stringify(data));
+    localOk = true;
+  } catch (e) {
+    console.error('[saveData] localStorage failed:', e?.name, e?.message);
   }
+  let cloudOk = false;
+  if (typeof window.cloudSaveConfig === 'function') {
+    try {
+      cloudOk = await window.cloudSaveConfig(data);
+    } catch (e) {
+      console.error('[saveData] cloudSaveConfig failed:', e?.message);
+    }
+  }
+  // OK si au moins une des deux a marché : le cloud rattrape le local plein
+  return localOk || cloudOk;
 }
 
 function getNextId(data) {

@@ -1,5 +1,5 @@
 /* ============================================================
-   PALAIS MAURICIEN — main.js
+   PALAIS MAURICIEN - main.js
    ============================================================ */
 
 const PAGE = document.body.dataset.page || 'home';
@@ -11,12 +11,22 @@ document.addEventListener('error', e => {
   const t = e.target;
   if (!t || t.tagName !== 'IMG' || t.dataset.fbDone) return;
   t.dataset.fbDone = '1';
+  console.warn('[main] image fallback applied for:', t.getAttribute('src'));
   if (t.dataset.fb === 'hide') t.style.display = 'none';
   else t.src = 'images/logo.png';
 }, true);
 const UBER_URL = 'https://www.ubereats.com/fr/store/palais-mauricien-le-port/_7jTtP06W32kgaXW9Nzmzw?diningMode=PICKUP&utm_campaign=CM2508147-search-free-nonbrand-google-pas_e_all_acq_Global&utm_medium=search-free-nonbrand&utm_source=google-pas&rwg_token=AFd1xnFa5X6LT87TanoBYmyR6c7A63QJJMPi883LKkvaUh7ohlv6qHbwHD7rUtzNdobl-A3J03lFWaZ17GuRpX5RC1j4pOs7xg%3D%3D';
 
-// Transitions de page désactivées — navigation native
+// Centralisation Uber Eats : on remplace tous les <a href="https://www.ubereats.com/..."> par UBER_URL
+// pour éviter d'avoir à éditer chaque fichier .html quand le lien change.
+function normalizeUberLinks() {
+  document.querySelectorAll('a[href*="ubereats.com"]').forEach(a => {
+    a.setAttribute('href', UBER_URL);
+  });
+}
+document.addEventListener('DOMContentLoaded', normalizeUberLinks);
+
+// Transitions de page désactivées - navigation native
 
 // Sync depuis Supabase au chargement (background)
 // Si les données du cloud diffèrent du cache local (ou cache vide), on recharge.
@@ -47,13 +57,13 @@ const UBER_URL = 'https://www.ubereats.com/fr/store/palais-mauricien-le-port/_7j
   } catch (_) {}
 })();
 
-// Track visit — uniquement si l'utilisateur a accepté les statistiques
+// Track visit - uniquement si l'utilisateur a accepté les statistiques
 // (consentement RGPD via le bandeau cookies en bas de page).
 if (localStorage.getItem('pm_cookies_ok') === '1') {
   trackVisit();
 }
 
-// ===== LOADER — uniquement au premier chargement de la page d'accueil =====
+// ===== LOADER - uniquement au premier chargement de la page d'accueil =====
 (function() {
   const loader = document.getElementById('loader');
   if (!loader) { window.addEventListener('load', () => initReveal()); return; }
@@ -120,7 +130,7 @@ window.addEventListener('scroll', () => navbar?.classList.toggle('scrolled', win
 navBurger?.addEventListener('click', () => { navBurger.classList.toggle('open'); navLinks?.classList.toggle('open'); });
 navLinks?.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { navBurger?.classList.remove('open'); navLinks.classList.remove('open'); }));
 
-// ===== RENDER MENU (cards — actuellement non utilisé sur menu.html) =====
+// ===== RENDER MENU (cards - actuellement non utilisé sur menu.html) =====
 function renderMenu() {
   const data = getData();
   CAT_KEYS.forEach(cat => {
@@ -175,7 +185,7 @@ function renderGalerie() {
   const all = CAT_KEYS.flatMap(cat => data.menu[cat].filter(i => i.visible).map(i => ({ ...i, cat })));
   const grid = document.getElementById('masonryGrid');
   if (!grid) return;
-  // Séquence de formes en vrac — jamais deux identiques consécutives
+  // Séquence de formes en vrac - jamais deux identiques consécutives
   const sizeSeq = [
     'masonry-portrait',  // 3/4
     '',                  // 1/1 carré
@@ -204,7 +214,7 @@ function renderGalerie() {
   initRevealCards();
 }
 
-// ===== FOOD CAROUSEL — marquee continu, slow auto-scroll =====
+// ===== FOOD CAROUSEL - marquee continu, slow auto-scroll =====
 function initFoodCarousel() {
   const viewport = document.getElementById('foodCarousel');
   const track = document.getElementById('foodCarouselTrack');
@@ -471,7 +481,7 @@ function renderHoraires() {
       hoursHtml = `<div class="horaire-times">${parts.join('')}</div>`;
     }
     return `<div class="horaire-row${isToday ? ' today' : ''}">
-      <span class="horaire-day">${label}${isToday ? ' <em style="font-size:.6rem;font-family:var(--font-mono);opacity:.6">— aujourd\'hui</em>' : ''}</span>
+      <span class="horaire-day">${label}${isToday ? ' <em style="font-size:.6rem;font-family:var(--font-mono);opacity:.6">- aujourd\'hui</em>' : ''}</span>
       ${hoursHtml}
     </div>`;
   }).join('');
@@ -487,7 +497,7 @@ function renderHoraires() {
         <div class="closures-public">
           <h4>Fermetures exceptionnelles à venir</h4>
           <ul>
-            ${upcoming.map(c => `<li><strong>${escHtml(formatDateFR(c.date))}</strong>${c.reason ? ' — ' + escHtml(c.reason) : ''}</li>`).join('')}
+            ${upcoming.map(c => `<li><strong>${escHtml(formatDateFR(c.date))}</strong>${c.reason ? ' - ' + escHtml(c.reason) : ''}</li>`).join('')}
           </ul>
         </div>`;
     }
@@ -504,7 +514,7 @@ function renderHoraires() {
   if (closureToday) text.textContent = 'Fermeture exceptionnelle aujourd\'hui';
   else if (reallyOpen) text.textContent = 'Ouvert maintenant';
   else if (todayHours.closed) text.textContent = 'Fermé aujourd\'hui';
-  else if (next) text.textContent = `Fermé — Ouvre à ${next}`;
+  else if (next) text.textContent = `Fermé - Ouvre à ${next}`;
   else text.textContent = 'Fermé pour aujourd\'hui';
 }
 
@@ -632,6 +642,36 @@ function initReveal() {
   }, { threshold: 0.12 });
 
   document.querySelectorAll('.reveal-up,.reveal-left,.reveal-right,.reveal-scale,.stat-num').forEach(el => io.observe(el));
+  initParallax();
+}
+
+// ===== PARALLAX background - fonctionne sur iOS (contournement de background-attachment:fixed) =====
+function initParallax() {
+  const bgs = document.querySelectorAll('[data-parallax]');
+  if (!bgs.length) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  let ticking = false;
+  const update = () => {
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    bgs.forEach(bg => {
+      const section = bg.parentElement;
+      if (!section) return;
+      const rect = section.getBoundingClientRect();
+      if (rect.bottom < -50 || rect.top > vh + 50) return;
+      // -1 (entrée bas écran) → +1 (sortie haut écran)
+      const progress = (rect.top + rect.height / 2 - vh / 2) / (vh + rect.height / 2);
+      const offset = -progress * 80; // amplitude 80px
+      bg.style.transform = `translate3d(0, ${offset.toFixed(2)}px, 0)`;
+    });
+    ticking = false;
+  };
+  const onScroll = () => {
+    if (!ticking) { ticking = true; requestAnimationFrame(update); }
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+  update();
 }
 
 function initRevealCards() {
@@ -717,7 +757,7 @@ function renderClosureBanner() {
   banner.className = 'pm-closure-banner';
   banner.innerHTML = `
     <span class="pm-closure-banner-icon" aria-hidden="true">⚠</span>
-    <span class="pm-closure-banner-text"><strong>Fermeture exceptionnelle aujourd'hui</strong>${closureToday.reason ? ' — ' + escHtml(closureToday.reason) : ''}</span>
+    <span class="pm-closure-banner-text"><strong>Fermeture exceptionnelle aujourd'hui</strong>${closureToday.reason ? ' - ' + escHtml(closureToday.reason) : ''}</span>
   `;
   document.body.prepend(banner);
 }
@@ -749,7 +789,7 @@ function renderDispoPage() {
   const dateLbl = document.getElementById('dispoTodayDate');
   if (dateLbl) {
     const fmt = new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
-    dateLbl.textContent = '— ' + (fmt.charAt(0).toUpperCase() + fmt.slice(1)) + ' —';
+    dateLbl.textContent = '- ' + (fmt.charAt(0).toUpperCase() + fmt.slice(1)) + ' -';
   }
 
   const dispo = getDispoToday();
@@ -766,7 +806,7 @@ function renderDispoPage() {
     container.innerHTML = `
       <div class="dispo-empty-state reveal-up">
         <h3>Aucune sélection pour le moment</h3>
-        <p>La carte du jour n'a pas encore été publiée. Découvrez l'ensemble de nos plats sur Uber Eats — les disponibilités y sont à jour.</p>
+        <p>La carte du jour n'a pas encore été publiée. Découvrez l'ensemble de nos plats sur Uber Eats - les disponibilités y sont à jour.</p>
         <a href="${UBER_URL}" target="_blank" rel="noopener" class="btn-gold">Commander sur Uber Eats</a>
       </div>`;
     return;
@@ -821,7 +861,7 @@ function renderDispoPage() {
   initReveal();
 }
 
-// ===== RENDER HOMEPAGE — section "Aujourd'hui à la carte" =====
+// ===== RENDER HOMEPAGE - section "Aujourd'hui à la carte" =====
 function renderHomeToday() {
   const section = document.getElementById('todaySection');
   const grid = document.getElementById('todayGrid');
@@ -846,7 +886,7 @@ function renderHomeToday() {
   `).join('');
 }
 
-// Badge "X restants" / "Rupture de stock" — null = ne rien afficher
+// Badge "X restants" / "Rupture de stock" - null = ne rien afficher
 function renderRemainingBadge(item) {
   const r = item && item.remaining;
   if (r === null || r === undefined) return '';
@@ -857,7 +897,7 @@ function renderRemainingBadge(item) {
   return '';
 }
 
-// ===== CARROUSEL AVIS — un seul avis à la fois, flèches + dots + swipe =====
+// ===== CARROUSEL AVIS - un seul avis à la fois, flèches + dots + swipe =====
 function initAvisCarousel() {
   const track = document.getElementById('avisTrack');
   const prev = document.getElementById('avisPrev');
