@@ -24,7 +24,7 @@
     { "source": "/disponible-aujourdhui", "destination": "/aujourdhui", "permanent": true }
   ],
   "rewrites": [
-    { "source": "/:path((?!api|assets|images|admin).*)", "destination": "/index.html" }
+    { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
     {
