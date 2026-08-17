@@ -637,6 +637,12 @@ export function SiteFooter() {
           Mentions légales
         </Link>
         <a
+          href="/admin.html"
+          className="text-white/80 text-[10px] tracking-wider hover:text-gold-400 transition-colors"
+        >
+          Administration
+        </a>
+        <a
           href="https://fondationstudio.fr/fr"
           target="_blank"
           rel="noopener noreferrer"
