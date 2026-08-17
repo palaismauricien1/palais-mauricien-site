@@ -34,3 +34,6 @@ node_modules/
 project/
 _legacy/
 dist/
+
+# QA (scripts + screenshots de test, non commités)
+_qa/

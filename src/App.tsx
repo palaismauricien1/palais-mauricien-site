@@ -2588,15 +2588,15 @@ function ContactPage() {
                   <div
                     key={dayKey}
                     style={{ animationDelay: `${i * 40}ms` }}
-                    className={`flex items-center justify-between px-5 py-3 text-sm animate-fade-up ${
+                    className={`flex items-center justify-between gap-4 px-5 py-3 text-sm animate-fade-up ${
                       dayKey === todayDayKey ? 'bg-gold-500/10' : ''
                     }`}
                   >
-                    <span className="font-medium text-dark-800">{DAY_LABELS[dayKey]}</span>
+                    <span className="font-medium text-dark-800 shrink-0">{DAY_LABELS[dayKey]}</span>
                     {!services ? (
                       <span className="text-red-600/80 font-medium text-sm">Fermé</span>
                     ) : (
-                      <span className="text-dark-800/70 text-sm">
+                      <span className="text-dark-800/70 text-sm text-right">
                         {services.midi && (
                           <>
                             Midi <span className="text-gold-700 font-medium">{services.midi}</span>
