@@ -124,7 +124,10 @@ function escHtml(s) {
 function escAttr(s) { return escHtml(s); }
 function escUrl(s) {
   // Autorise http(s), data:image (uploads), et chemins relatifs
-  const v = String(s == null ? '' : s).trim();
+  let v = String(s == null ? '' : s).trim();
+  // Les fichiers de /images sont nommés en ASCII (les accents ne survivent pas
+  // à l'upload Vercel) : on translittère les chemins relatifs avant affichage.
+  if (!/^(https?:|data:)/i.test(v)) v = v.normalize('NFD').replace(/[̀-ͯ]/g, '');
   if (/^(https?:|data:image\/|\/|images\/|\.\.?\/)/i.test(v)) return escAttr(v);
   return 'images/logo.png';
 }

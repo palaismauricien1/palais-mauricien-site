@@ -421,7 +421,11 @@ export function resolveImg(img: string): string {
   if (!v) return FALLBACK_IMG;
   if (v.startsWith('data:')) return v;
   if (/^https?:/i.test(v)) return v;
-  return encodeURI('/' + v.replace(/^\.?\.?\//, ''));
+  // Les fichiers de public/images sont nommés en ASCII (les noms accentués ne
+  // survivent pas à l'upload Vercel) ; les données admin/Supabase gardent leurs
+  // accents ("sauté poulet fumé") → on translittère le chemin avant requête.
+  const ascii = v.normalize('NFD').replace(/[̀-ͯ]/g, '');
+  return encodeURI('/' + ascii.replace(/^\.?\.?\//, ''));
 }
 
 /** onError d'<img> : bascule sur le logo (une seule fois, pas de boucle). */
