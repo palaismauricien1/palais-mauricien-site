@@ -1,0 +1,513 @@
+@import url('https://fonts.googleapis.com/css2?family=Allura&family=Cormorant+Garamond:wght@500;600&family=Montserrat:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.hero-title {
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 600;
+}
+.hero-script {
+  font-family: "Allura", cursive;
+  font-weight: 400;
+}
+.hero-ui {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+}
+
+/* Navbar links — organic wavy underline, unfurling from the center on hover */
+.nav-wave-link {
+  position: relative;
+  padding-bottom: 2px;
+}
+
+.nav-wave-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 1.5px;
+  background-color: #D6A94F;
+  opacity: 0;
+  clip-path: inset(0 50% 0 50%);
+  transition: clip-path 420ms cubic-bezier(0.22, 1, 0.36, 1), opacity 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.nav-wave-link:hover::after,
+.nav-wave-link:focus-visible::after {
+  opacity: 1;
+  clip-path: inset(0 0% 0 0%);
+}
+
+.nav-wave-link.is-active::after {
+  opacity: 0.95;
+  clip-path: inset(0 0% 0 0%);
+  filter: brightness(1.3) drop-shadow(0 0 3px rgba(214, 169, 79, 0.5));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-wave-link::after {
+    clip-path: inset(0 0% 0 0%);
+    transition: opacity 200ms ease;
+  }
+}
+
+/* Prestige & chaleureux — chamfered "cut corner" shape shared by every CTA button/link-button,
+   with a slightly inset second border nested inside it for a "double frame" premium look.
+
+   The border rings below are NOT drawn with the `border` property — a plain `border` clipped by
+   this same clip-path only keeps the four straight edges and drops the diagonal corner segments
+   entirely (no stroke is ever drawn along a clip-path cut), so the frame reads as four
+   disconnected pieces. Instead each ring is a single "keyhole" clip-path polygon: it traces the
+   outer chamfered octagon, bridges inward along a zero-width seam, traces a slightly smaller
+   octagon in the opposite winding direction, then bridges back out. Under the default nonzero
+   fill rule that reversed inner loop becomes a hole, so the filled (currentColor) shape is the
+   ring itself — genuinely connected at every corner, and correct whether the button's own
+   background is solid or fully transparent. */
+.btn-chamfer {
+  --chamfer: 10px;
+  --frame-inset: 4px;
+  clip-path: polygon(
+    var(--chamfer) 0,
+    calc(100% - var(--chamfer)) 0,
+    100% var(--chamfer),
+    100% calc(100% - var(--chamfer)),
+    calc(100% - var(--chamfer)) 100%,
+    var(--chamfer) 100%,
+    0 calc(100% - var(--chamfer)),
+    0 var(--chamfer)
+  );
+}
+/* Skip when the button is itself Tailwind-positioned (fixed/absolute for its own placement)
+   so we don't clobber that positioning — the pseudo-elements still anchor to it either way. */
+.btn-chamfer:not(.fixed):not(.absolute) {
+  position: relative;
+}
+.btn-chamfer::before,
+.btn-chamfer-outline::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+}
+
+/* Decorative inner frame — thin ring inset a few px from the edge, present on every chamfer button. */
+.btn-chamfer::before {
+  inset: var(--frame-inset);
+  background: currentColor;
+  opacity: 0.4;
+  --rc: calc(var(--chamfer) - var(--frame-inset));
+  --rw: 1px;
+  clip-path: polygon(
+    var(--rc) 0, calc(100% - var(--rc)) 0, 100% var(--rc), 100% calc(100% - var(--rc)),
+    calc(100% - var(--rc)) 100%, var(--rc) 100%, 0 calc(100% - var(--rc)), 0 var(--rc), var(--rc) 0,
+    var(--rc) var(--rw),
+    var(--rw) var(--rc),
+    var(--rw) calc(100% - var(--rc)),
+    var(--rc) calc(100% - var(--rw)),
+    calc(100% - var(--rc)) calc(100% - var(--rw)),
+    calc(100% - var(--rw)) calc(100% - var(--rc)),
+    calc(100% - var(--rw)) var(--rc),
+    calc(100% - var(--rc)) var(--rw),
+    var(--rc) var(--rw)
+  );
+}
+.btn-chamfer-sm {
+  --chamfer: 6px;
+}
+/* Compact buttons stay clean — a nested frame has no room to breathe at this size. */
+.btn-chamfer-sm::before {
+  content: none;
+}
+.btn-chamfer-lg {
+  --chamfer: 16px;
+  --frame-inset: 5px;
+}
+
+/* Main outline border — for buttons that used to rely on a plain `border` utility; add this
+   class and drop the Tailwind `border-*` class instead, so only the connected ring renders. */
+.btn-chamfer-outline::after {
+  inset: 0;
+  background: currentColor;
+  opacity: 0.55;
+  --rc: var(--chamfer);
+  --rw: 1.5px;
+  clip-path: polygon(
+    var(--rc) 0, calc(100% - var(--rc)) 0, 100% var(--rc), 100% calc(100% - var(--rc)),
+    calc(100% - var(--rc)) 100%, var(--rc) 100%, 0 calc(100% - var(--rc)), 0 var(--rc), var(--rc) 0,
+    var(--rc) var(--rw),
+    var(--rw) var(--rc),
+    var(--rw) calc(100% - var(--rc)),
+    var(--rc) calc(100% - var(--rw)),
+    calc(100% - var(--rc)) calc(100% - var(--rw)),
+    calc(100% - var(--rw)) calc(100% - var(--rc)),
+    calc(100% - var(--rw)) var(--rc),
+    calc(100% - var(--rc)) var(--rw),
+    var(--rc) var(--rw)
+  );
+}
+
+/* Prestige & chaleureux — plain text CTAs underlined with a centered diamond ornament */
+.link-ornate {
+  position: relative;
+  padding-bottom: 9px;
+}
+.link-ornate::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 3px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.35;
+}
+.link-ornate::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 1.5px;
+  width: 5px;
+  height: 5px;
+  background: currentColor;
+  transform: translateX(-50%) rotate(45deg);
+}
+
+/* Top info marquee — slow, seamless loop (two identical segments, shift by 50%) */
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  animation: marquee-scroll 34s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* Scrollbar — masquée sur tous les navigateurs (le scroll reste fonctionnel) */
+html {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+/* Custom cursor follower */
+.custom-cursor-active,
+.custom-cursor-active a,
+.custom-cursor-active button {
+  cursor: none;
+}
+
+.cursor-ring,
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9999;
+  border-radius: 9999px;
+}
+
+.cursor-ring {
+  width: 34px;
+  height: 34px;
+  border: 1.5px solid #c9a84c;
+  transition: width 0.25s cubic-bezier(0.22, 1, 0.36, 1), height 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.25s ease, opacity 0.2s ease;
+}
+
+.cursor-ring--hover {
+  width: 56px;
+  height: 56px;
+  background-color: rgba(201, 168, 76, 0.12);
+}
+
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  background-color: #c9a84c;
+  transition: opacity 0.2s ease;
+}
+
+/* ===== Preloader ===== */
+body.preloader-active {
+  overflow: hidden;
+}
+
+/* Hero entrance animations stay frozen at their pre-animation (invisible)
+   state while the preloader owns the screen, then play normally once it's
+   removed — see the `hero-reveal` class on the Hero's elements in App.tsx. */
+body.preloader-active .hero-reveal {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-reveal {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.preloader__backdrop {
+  position: absolute;
+  inset: 0;
+  background: #0e0705;
+}
+
+.preloader__texture {
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 0.84  0 0 0 0 0.71  0 0 0 0 0.45  0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+.preloader__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.25rem, 3vw, 2rem);
+  padding: 1.5rem;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.preloader--exiting .preloader__content {
+  opacity: 0;
+  transform: scale(1.04);
+}
+
+.preloader__badge {
+  position: relative;
+  width: clamp(120px, 20vw, 200px);
+  height: clamp(120px, 20vw, 200px);
+}
+
+.preloader__ring {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.preloader__ring circle {
+  fill: none;
+  stroke: #d6a94f;
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: preloader-draw 1.1s cubic-bezier(0.65, 0, 0.35, 1) 0.15s forwards;
+}
+
+@keyframes preloader-draw {
+  to {
+    stroke-dashoffset: 17;
+  }
+}
+
+.preloader__orbit {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  animation: preloader-orbit 1.1s cubic-bezier(0.65, 0, 0.35, 1) 0.15s forwards;
+}
+
+.preloader__glow {
+  position: absolute;
+  top: 4%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: #f3d78a;
+  box-shadow: 0 0 10px 3px rgba(214, 169, 79, 0.7);
+  transform: translate(-50%, -50%);
+}
+
+@keyframes preloader-orbit {
+  0% {
+    opacity: 1;
+    transform: rotate(-90deg);
+  }
+  95% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(208deg);
+  }
+}
+
+.preloader__monogram {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: 0;
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 600;
+  font-size: clamp(2.25rem, 5vw, 3.25rem);
+  letter-spacing: 0.08em;
+  color: #f4e6c8;
+  opacity: 0;
+  transform: translate(-50%, calc(-50% + 20px));
+  animation: preloader-monogram 0.6s ease-out 0.55s forwards;
+}
+
+@keyframes preloader-monogram {
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.preloader__brand {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+  opacity: 0;
+  transform: translateY(10px);
+  animation: preloader-fade 0.6s ease-out 0.85s forwards;
+}
+
+@keyframes preloader-fade {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.preloader__brand-line {
+  width: clamp(24px, 4vw, 48px);
+  height: 1px;
+  background: rgba(214, 169, 79, 0.5);
+  transform: scaleX(0);
+  animation: preloader-line 0.6s ease-out 0.95s forwards;
+}
+
+.preloader__brand-line:first-child {
+  transform-origin: right;
+}
+
+.preloader__brand-line:last-child {
+  transform-origin: left;
+}
+
+@keyframes preloader-line {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.preloader__brand-text p {
+  margin: 0;
+  text-align: center;
+  color: #d6a94f;
+  font-family: "Montserrat", sans-serif;
+}
+
+.preloader__brand-text p:first-child {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+}
+
+.preloader__brand-text p:last-child {
+  margin-top: 0.4rem;
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  color: rgba(244, 230, 200, 0.5);
+}
+
+.preloader__particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.preloader__particle {
+  position: absolute;
+  border-radius: 9999px;
+  background: #d6a94f;
+  opacity: 0;
+  filter: blur(0.5px);
+  animation: preloader-particle-in 0.8s ease-out forwards, preloader-particle-float 4s ease-in-out infinite alternate;
+}
+
+@keyframes preloader-particle-in {
+  to {
+    opacity: 0.35;
+  }
+}
+
+@keyframes preloader-particle-float {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-10px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preloader {
+    transition: opacity 0.3s ease;
+  }
+  .preloader--exiting {
+    opacity: 0;
+  }
+  .preloader__content {
+    transition: opacity 0.3s ease;
+  }
+  .preloader--exiting .preloader__content {
+    transform: none;
+  }
+  .preloader__ring circle,
+  .preloader__brand,
+  .preloader__brand-line {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    stroke-dashoffset: 17 !important;
+  }
+  .preloader__monogram {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: translate(-50%, -50%) !important;
+  }
+  .preloader__orbit,
+  .preloader__particles {
+    display: none;
+  }
+}

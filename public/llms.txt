@@ -59,7 +59,7 @@ Le restaurant sert exclusivement de la cuisine **mauricienne halal**, gamme de p
 
 ## Sélection du jour
 
-Le restaurant met en ligne chaque matin une **sélection des plats disponibles le jour même** sur https://www.palaismauricien.re/disponible-aujourdhui.html - utile pour vérifier ce qui est prêt à être commandé.
+Le restaurant met en ligne chaque matin une **sélection des plats disponibles le jour même** sur https://www.palaismauricien.re/aujourdhui - utile pour vérifier ce qui est prêt à être commandé.
 
 ## Notation
 
@@ -67,17 +67,21 @@ Le restaurant met en ligne chaque matin une **sélection des plats disponibles l
 
 ## Pages du site
 
-- `/` : page d'accueil avec présentation et carrousel des plats
-- `/menu.html` : carte complète avec tous les plats et prix
-- `/disponible-aujourdhui.html` : sélection mise à jour quotidiennement
-- `/galerie.html` : photos des plats
-- `/a-propos.html` : histoire et valeurs du restaurant
-- `/contact.html` : adresse, horaires, plan
-- `/mentions-legales.html` : mentions légales et politique RGPD
+- https://www.palaismauricien.re/ : page d'accueil avec présentation, témoignages et FAQ
+- https://www.palaismauricien.re/menu : carte complète avec tous les plats et prix
+- https://www.palaismauricien.re/aujourdhui : sélection du jour, mise à jour quotidiennement
+- https://www.palaismauricien.re/galerie : photos des plats
+- https://www.palaismauricien.re/a-propos : histoire et valeurs du restaurant
+- https://www.palaismauricien.re/contact : adresse, horaires, plan d'accès
+- https://www.palaismauricien.re/masale-cabri : le masalé cabri, plat signature (9 €)
+- https://www.palaismauricien.re/vinday-poisson : le vinday poisson, classique mauricien (9 €)
+- https://www.palaismauricien.re/brochette-mauricienne : la brochette mauricienne, street food signature (3,50 €)
+- https://www.palaismauricien.re/mentions-legales : mentions légales et politique RGPD
 
 ## Liens externes
 
 - Facebook : https://www.facebook.com/people/Palais-mauricien/100070319323315/
+- TikTok : https://www.tiktok.com/@palaismauricien97420
 - Uber Eats : https://www.ubereats.com/fr/store/palais-mauricien-le-port/_7jTtP06W32kgaXW9Nzmzw
 - Itinéraire Google Maps : https://www.google.com/maps/search/22+Av.+de+la+Commune+de+Paris+Le+Port+97420+La+Reunion
 

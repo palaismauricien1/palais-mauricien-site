@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /admin
 Disallow: /admin.html
 Disallow: /admin.css
 Disallow: /admin.js
@@ -7,76 +8,94 @@ Disallow: /admin.js
 # Bots IA / réponses générées - autorisation explicite
 User-agent: GPTBot
 Allow: /
+Disallow: /admin
 Disallow: /admin.html
 Disallow: /admin.css
 Disallow: /admin.js
 
 User-agent: ChatGPT-User
 Allow: /
+Disallow: /admin
 Disallow: /admin.html
 
 User-agent: OAI-SearchBot
 Allow: /
+Disallow: /admin
 Disallow: /admin.html
 
 User-agent: ClaudeBot
 Allow: /
+Disallow: /admin
 Disallow: /admin.html
 
 User-agent: anthropic-ai
 Allow: /
+Disallow: /admin
 Disallow: /admin.html
 
 User-agent: Claude-Web
 Allow: /
+Disallow: /admin
 Disallow: /admin.html
 
 User-agent: PerplexityBot
 Allow: /
+Disallow: /admin
 Disallow: /admin.html
 
 User-agent: Perplexity-User
 Allow: /
+Disallow: /admin
 Disallow: /admin.html
 
 User-agent: Google-Extended
 Allow: /
+Disallow: /admin
 Disallow: /admin.html
 
 User-agent: Bingbot
 Allow: /
+Disallow: /admin
 Disallow: /admin.html
 
 User-agent: CCBot
 Allow: /
+Disallow: /admin
 Disallow: /admin.html
 
 User-agent: Applebot
 Allow: /
+Disallow: /admin
 Disallow: /admin.html
 
 User-agent: Applebot-Extended
 Allow: /
+Disallow: /admin
 Disallow: /admin.html
 
 User-agent: cohere-ai
 Allow: /
+Disallow: /admin
 Disallow: /admin.html
 
 User-agent: MistralAI-User
 Allow: /
+Disallow: /admin
 Disallow: /admin.html
 
 User-agent: Meta-ExternalAgent
 Allow: /
+Disallow: /admin
 Disallow: /admin.html
 
 User-agent: Bytespider
 Allow: /
+Disallow: /admin
 Disallow: /admin.html
 
 User-agent: DuckAssistBot
 Allow: /
+Disallow: /admin
 Disallow: /admin.html
 
 Sitemap: https://www.palaismauricien.re/sitemap.xml

@@ -2,16 +2,16 @@
 
 Site officiel du restaurant **Palais Mauricien**, Le Port - La Réunion.
 
-🌐 [palaismauricien.re](https://palaismauricien.re)
+🌐 [www.palaismauricien.re](https://www.palaismauricien.re)
 
 ---
 
 ## 🏗️ Stack
 
-- **HTML / CSS / JavaScript vanilla** (pas de framework)
-- **Vercel** pour l'hébergement et le déploiement continu
-- **Vercel Edge Middleware** pour la protection de l'admin
-- Données stockées en **localStorage** (pas de base de données)
+- **React 18 + Vite + TypeScript** (SPA, React Router)
+- **Tailwind CSS** + styles custom (boutons chanfreinés, curseur, preloader)
+- **Supabase** : configuration du site (`site_config`), statistiques de visites (`visits`), authentification admin
+- **Vercel** pour l'hébergement et le déploiement continu (`vercel.json` : redirections, headers de sécurité, CSP)
 
 ---
 
@@ -19,92 +19,37 @@ Site officiel du restaurant **Palais Mauricien**, Le Port - La Réunion.
 
 ```
 .
-├── index.html              # Accueil
-├── menu.html               # Menu (5 catégories)
-├── disponible-aujourdhui.html  # Plats du jour
-├── galerie.html            # Galerie photos
-├── a-propos.html           # À propos
-├── contact.html            # Contact + horaires + Maps
-├── mentions-legales.html   # Mentions légales / CGU
-├── admin.html              # Espace admin (protégé)
-│
-├── style.css               # Styles site public
-├── admin.css               # Styles admin
-│
-├── main.js                 # Logique site public
-├── admin.js                # Logique admin
-├── data.js                 # Données menu, horaires, mot de passe admin
-├── middleware.js           # Vercel Edge - Basic Auth /admin
-│
-├── images/                 # Photos plats, logo, hero
-├── robots.txt              # SEO crawlers
-└── sitemap.xml             # SEO sitemap
+├── index.html              # Entrée Vite (meta SEO par défaut)
+├── src/
+│   ├── App.tsx             # Routes + pages (accueil, aujourd'hui, menu, galerie, à propos, contact)
+│   ├── pages/              # Mentions légales, pages plats, 404
+│   ├── lib/                # Client Supabase, config du site, helpers métier
+│   ├── cursor.tsx          # Curseur personnalisé + effet magnétique
+│   ├── preloader.tsx       # Animation de chargement
+│   └── index.css           # Styles custom
+├── public/
+│   ├── admin.html/js/css   # Panel admin (statique, autonome, noindex)
+│   ├── data.js             # Données par défaut + helpers admin
+│   ├── supabase-client.js  # Client Supabase du panel admin
+│   ├── images/             # Photos des plats et du restaurant
+│   ├── robots.txt / sitemap.xml / llms.txt
+├── vercel.json             # Redirections, rewrite SPA, headers sécurité
+└── supabase-fix-visits-rls.sql  # Politique RLS de la table visits
 ```
 
----
+## 🔄 Données dynamiques
 
-## 🔐 Accès admin
+Le contenu éditable (menu, plats du jour + portions restantes, horaires,
+fermetures exceptionnelles, lien TikTok) vit dans Supabase `site_config` (id=1)
+et est édité via `/admin.html`. Le front React lit ce config au chargement
+(cache `localStorage.pm_data`, clé publishable Supabase — publique par design).
 
-URL : `/admin.html`
-
-Protection en deux couches :
-1. **Vercel Basic Auth** (couche serveur) - popup navigateur
-2. **Formulaire JS** (couche app)
-
-Mot de passe par défaut : voir documentation interne.
-
-Pour changer le mot de passe :
-- Couche 1 : modifier `middleware.js` (constante `PASSWORD`)
-- Couche 2 : utiliser **Paramètres → Changer le mot de passe** dans l'admin (modifie le localStorage)
-
-⚠️ Ces deux mots de passe **doivent être synchronisés** manuellement.
-
----
-
-## 🚀 Déploiement
-
-Push sur la branche `main` → Vercel déploie automatiquement.
+## 🚀 Développement
 
 ```bash
-git add .
-git commit -m "Description du changement"
-git push
+npm install
+npm run dev        # serveur local
+npm run typecheck  # tsc --noEmit
+npm run lint
+npm run build      # build de production (dist/)
 ```
-
-Build : 30 secondes environ.
-
----
-
-## 🛠️ Développement local
-
-Serveur local Python :
-```bash
-python -m http.server 8000
-```
-
-Puis ouvrir http://localhost:8000
-
----
-
-## 📝 Fonctionnalités admin
-
-- Tableau de bord (stats visites)
-- Gestion du menu (CRUD plats par catégorie)
-- Plats du jour (sélection journalière)
-- Gestion des horaires (par service midi/soir, par jour)
-- Paramètres (changement mot de passe, reset)
-
----
-
-## ⚠️ Limitation à connaître
-
-Les données admin sont stockées en **localStorage** côté navigateur. Conséquence :
-- Le client doit utiliser **toujours le même navigateur sur le même appareil** pour gérer le menu
-- Effacer les cookies/cache du navigateur efface les modifs
-- Pour une vraie persistance multi-appareils, ajouter un backend (Supabase, Firebase, etc.) - non implémenté
-
----
-
-## 📞 Contact technique
-
-Maintenance : à définir avec le développeur.

@@ -7,7 +7,21 @@
       "has": [{ "type": "host", "value": "palaismauricien.re" }],
       "destination": "https://www.palaismauricien.re/:path*",
       "permanent": true
-    }
+    },
+    { "source": "/index.html", "destination": "/", "permanent": true },
+    { "source": "/menu.html", "destination": "/menu", "permanent": true },
+    { "source": "/galerie.html", "destination": "/galerie", "permanent": true },
+    { "source": "/a-propos.html", "destination": "/a-propos", "permanent": true },
+    { "source": "/contact.html", "destination": "/contact", "permanent": true },
+    { "source": "/mentions-legales.html", "destination": "/mentions-legales", "permanent": true },
+    { "source": "/masale-cabri.html", "destination": "/masale-cabri", "permanent": true },
+    { "source": "/vinday-poisson.html", "destination": "/vinday-poisson", "permanent": true },
+    { "source": "/brochette-mauricienne.html", "destination": "/brochette-mauricienne", "permanent": true },
+    { "source": "/disponible-aujourdhui.html", "destination": "/aujourdhui", "permanent": true },
+    { "source": "/disponible-aujourdhui", "destination": "/aujourdhui", "permanent": true }
+  ],
+  "rewrites": [
+    { "source": "/:path((?!api|assets|images|admin).*)", "destination": "/index.html" }
   ],
   "headers": [
     {
@@ -22,9 +36,16 @@
       ]
     },
     {
-      "source": "/admin.(html|css|js)",
+      "source": "/admin(.*)",
       "headers": [
-        { "key": "X-Robots-Tag", "value": "noindex, nofollow" }
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" },
+        { "key": "Cache-Control", "value": "no-store" }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     },
     {
