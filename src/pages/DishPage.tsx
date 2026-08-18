@@ -355,6 +355,7 @@ export default function DishPage({ slug }: { slug: DishSlug }) {
         ]}
       />
       <SiteHeader />
+      <main id="contenu">
 
       {/* ── HERO ── */}
       <section className="relative pt-44 pb-20 px-6 lg:px-10 overflow-hidden">
@@ -481,6 +482,7 @@ export default function DishPage({ slug }: { slug: DishSlug }) {
           </Reveal>
         </div>
       </article>
+      </main>
 
       <SiteFooter />
       <PersistentCTAs />

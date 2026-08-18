@@ -197,6 +197,29 @@
   }
 }
 
+/* Skip-link — masqué hors focus, révélé au clavier (Tab en début de page) */
+.skip-link {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -120%);
+  z-index: 9999;
+  padding: 0.75rem 1.25rem;
+  background: #0d0d0d;
+  color: #d6a94f;
+  border: 1px solid rgba(214, 169, 79, 0.5);
+  border-radius: 0 0 0.75rem 0.75rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  transition: transform 0.2s ease;
+}
+.skip-link:focus {
+  transform: translate(-50%, 0);
+  outline: none;
+}
+
 /* Scrollbar — masquée sur tous les navigateurs (le scroll reste fonctionnel) */
 html {
   scrollbar-width: none;

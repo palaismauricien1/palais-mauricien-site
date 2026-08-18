@@ -685,12 +685,52 @@ a{text-decoration:none}
   text-transform:uppercase;color:var(--muted);font-weight:600
 }
 .save-confirm.error{color:var(--danger);background:var(--danger-bg)}
+
+/* --- Stepper −/+ (décompte rapide pendant le service) --- */
+.dispo-step{
+  width:44px;height:44px;flex-shrink:0;
+  display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid var(--border-s);border-radius:var(--radius);
+  background:var(--surface-3);color:var(--primary);
+  font-family:var(--font);font-size:1.3rem;font-weight:700;line-height:1;
+  cursor:pointer;user-select:none;-webkit-user-select:none;
+  touch-action:manipulation;padding:0;
+  transition:border-color .15s,background .15s,transform .1s,opacity .15s
+}
+.dispo-step:hover:not(:disabled){border-color:var(--primary);background:var(--primary-d)}
+.dispo-step:active:not(:disabled){transform:scale(.92)}
+.dispo-step:disabled{opacity:.25;cursor:not-allowed}
+.dispo-soldout{
+  display:inline-block;margin-left:8px;padding:2px 8px;border-radius:2px;
+  font-family:var(--font);font-size:.55rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--danger);background:var(--danger-bg);
+  font-weight:700;vertical-align:middle;white-space:nowrap
+}
+.dispo-row.is-soldout .dispo-img{filter:grayscale(1);opacity:.6}
+
 @media(max-width:768px){
   .dispo-remaining-wrap{margin-right:.4rem;gap:.25rem}
-  .dispo-remaining{width:34px;height:26px;padding:0 4px;font-size:.72rem}
+  .dispo-remaining{width:38px;height:44px;padding:0 4px;font-size:.85rem}
   .dispo-remaining-label{font-size:.5rem;letter-spacing:.1em}
 }
+/* Sur téléphone : le stepper passe sur sa propre ligne, pleine largeur (usage au doigt) */
+@media(max-width:600px){
+  .dispo-row{
+    grid-template-columns:54px 1fr 48px;
+    grid-template-areas:
+      "img info toggle"
+      "qty qty qty";
+  }
+  .dispo-row .dispo-img{grid-area:img}
+  .dispo-row .dispo-info{grid-area:info}
+  .dispo-row .dispo-toggle{grid-area:toggle}
+  .dispo-remaining-wrap{
+    grid-area:qty;margin:2px 0 0;gap:.5rem;
+    justify-content:flex-end
+  }
+  .dispo-remaining{width:56px;font-size:.95rem}
+  .dispo-remaining-label{order:-1;margin-right:auto}
+}
 @media(max-width:480px){
-  .dispo-remaining-label{display:none}
-  .dispo-remaining-wrap{margin-right:.3rem}
+  .dispo-remaining-wrap{gap:.4rem}
 }

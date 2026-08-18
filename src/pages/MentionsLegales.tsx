@@ -28,6 +28,7 @@ export default function MentionsLegales() {
         jsonLd={breadcrumbLd([['Accueil', '/'], ['Mentions légales', '/mentions-legales']])}
       />
       <SiteHeader />
+      <main id="contenu">
 
       <section className="pt-40 pb-10 px-6 lg:px-10 bg-dark-900">
         <Reveal className="max-w-[780px] mx-auto">
@@ -258,6 +259,7 @@ export default function MentionsLegales() {
           </LegalSection>
         </div>
       </section>
+      </main>
 
       <SiteFooter />
     </div>

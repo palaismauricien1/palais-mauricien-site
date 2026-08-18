@@ -161,6 +161,21 @@ async function renderDashboard() {
     dispoEl.textContent = n + (isToday ? '' : ' · sélection à mettre à jour');
     dispoEl.style.color = !isToday && n > 0 ? '#e0a052' : '';
   }
+
+  // Total de portions restantes sur les plats du jour (quantités renseignées)
+  const portionsEl = document.getElementById('countPortions');
+  if (portionsEl) {
+    let total = 0;
+    let configured = 0;
+    CAT_KEYS.forEach(cat => (data.menu[cat] || []).forEach(i => {
+      if (i.visible && i.dispoToday && typeof i.remaining === 'number') {
+        configured++;
+        total += i.remaining;
+      }
+    }));
+    portionsEl.textContent = configured ? `${total} portion${total > 1 ? 's' : ''}` : '-';
+    portionsEl.style.color = configured && total === 0 ? '#e05252' : '';
+  }
 }
 
 // ===== PLATS DU JOUR =====
@@ -197,20 +212,25 @@ function renderDispoPage() {
         <div class="dispo-list">
           ${items.map(item => {
             const remVal = (item.remaining === 0 || item.remaining > 0) ? item.remaining : '';
+            const soldout = item.dispoToday && item.remaining === 0;
             return `
-            <label class="dispo-row" data-id="${item.id}" data-cat="${escAttr(c.key)}">
+            <label class="dispo-row${soldout ? ' is-soldout' : ''}" data-id="${item.id}" data-cat="${escAttr(c.key)}">
               <input type="checkbox" class="dispo-check" data-id="${item.id}" data-cat="${escAttr(c.key)}" ${item.dispoToday ? 'checked' : ''}/>
               <img class="dispo-img" src="${escUrl(item.img)}" alt="${escAttr(item.name)}"/>
               <div class="dispo-info">
-                <div class="dispo-name">${escHtml(item.name)}</div>
+                <div class="dispo-name">${escHtml(item.name)}<span class="dispo-soldout${soldout ? '' : ' hidden'}">Épuisé</span></div>
                 <div class="dispo-desc">${escHtml(item.desc)}</div>
               </div>
               <span class="dispo-price">${escHtml(getDisplayPrice(item))}</span>
               <span class="dispo-remaining-wrap" title="Nombre de portions restantes (laisser vide pour ne pas afficher)">
+                <button type="button" class="dispo-step dispo-step-minus" data-dir="-1"
+                  aria-label="Retirer une portion" ${item.dispoToday ? '' : 'disabled'}>&minus;</button>
                 <input type="number" min="0" step="1" inputmode="numeric"
                   class="dispo-remaining" data-id="${item.id}" data-cat="${escAttr(c.key)}"
                   placeholder="-" value="${escAttr(remVal)}"
                   ${item.dispoToday ? '' : 'disabled'}/>
+                <button type="button" class="dispo-step dispo-step-plus" data-dir="1"
+                  aria-label="Ajouter une portion" ${item.dispoToday ? '' : 'disabled'}>+</button>
                 <span class="dispo-remaining-label">restants</span>
               </span>
               <span class="dispo-toggle"></span>
@@ -234,6 +254,7 @@ function renderDispoPage() {
         qtyInput.disabled = !c.checked;
         if (!c.checked) qtyInput.value = '';
       }
+      refreshDispoRowUI(row);
       updateCount();
     });
   });
@@ -248,9 +269,101 @@ function renderDispoPage() {
       let v = input.value.replace(/[^\d]/g, '');
       if (v.length > 1) v = v.replace(/^0+/, '') || '0';
       input.value = v;
+      refreshDispoRowUI(input.closest('.dispo-row'));
     });
   });
+  // Stepper −/+ : décompte rapide pendant le service, sauvegarde auto (debounce)
+  wrap.querySelectorAll('.dispo-step').forEach(btn => {
+    btn.addEventListener('click', e => {
+      // Ne surtout pas laisser le clic remonter au <label> (cocherait/décocherait la ligne)
+      e.preventDefault();
+      e.stopPropagation();
+      const row = btn.closest('.dispo-row');
+      const input = row?.querySelector('.dispo-remaining');
+      const check = row?.querySelector('.dispo-check');
+      if (!row || !input || input.disabled || !check?.checked) return;
+      const dir = parseInt(btn.dataset.dir, 10);
+      const cur = normalizeRemaining(input.value);
+      // Quantité non renseignée : "+" démarre le compteur à 1, "−" ne fait rien
+      const next = cur === null ? (dir > 0 ? 1 : null) : Math.max(0, cur + dir);
+      if (next === null || next === cur) return;
+      input.value = String(next);
+      refreshDispoRowUI(row);
+      queueDispoQuickSave(row.dataset.cat, parseInt(row.dataset.id, 10), next);
+    });
+  });
+  wrap.querySelectorAll('.dispo-row').forEach(refreshDispoRowUI);
   updateCount();
+}
+
+/* ---- Décompte rapide (page Plats du jour) ---- */
+
+// Met à jour le badge "Épuisé" + l'état des boutons −/+ d'une ligne.
+function refreshDispoRowUI(row) {
+  if (!row) return;
+  const check = row.querySelector('.dispo-check');
+  const input = row.querySelector('.dispo-remaining');
+  const minus = row.querySelector('.dispo-step-minus');
+  const plus = row.querySelector('.dispo-step-plus');
+  const badge = row.querySelector('.dispo-soldout');
+  const checked = !!(check && check.checked);
+  const soldout = checked && input && input.value === '0';
+  if (badge) badge.classList.toggle('hidden', !soldout);
+  row.classList.toggle('is-soldout', soldout);
+  if (plus) plus.disabled = !checked;
+  if (minus) minus.disabled = !checked || !input || input.value === '' || input.value === '0';
+}
+
+// Sauvegarde auto des clics −/+ : debounce 800 ms pour grouper les clics rapides,
+// puis écriture via la mécanique existante (safeSave → localStorage + Supabase).
+// On ne touche qu'aux items modifiés : les autres réglages non enregistrés de la
+// page (cases cochées/décochées, saisies manuelles) restent intacts jusqu'au
+// clic sur « Enregistrer la sélection ».
+const dispoQuickPending = new Map(); // "cat:id" → { cat, id, remaining }
+let dispoQuickTimer = null;
+let dispoQuickChain = Promise.resolve(); // sérialise les sauvegardes successives
+let dispoQuickToastTimer = null;
+
+function queueDispoQuickSave(cat, id, remaining) {
+  if (!cat || !Number.isInteger(id)) return;
+  dispoQuickPending.set(cat + ':' + id, { cat, id, remaining });
+  clearTimeout(dispoQuickTimer);
+  dispoQuickTimer = setTimeout(flushDispoQuickSave, 800);
+}
+
+function flushDispoQuickSave() {
+  dispoQuickTimer = null;
+  if (!dispoQuickPending.size) return;
+  const batch = Array.from(dispoQuickPending.values());
+  dispoQuickPending.clear();
+  dispoQuickChain = dispoQuickChain.then(async () => {
+    try {
+      const d = getData();
+      let touched = false;
+      batch.forEach(({ cat, id, remaining }) => {
+        const item = (d.menu[cat] || []).find(i => i.id === id);
+        if (!item) return;
+        item.dispoToday = true; // le stepper n'est actif que sur une ligne cochée
+        item.remaining = normalizeRemaining(remaining);
+        touched = true;
+      });
+      if (!touched) return;
+      const ok = await safeSave(d);
+      if (ok) showDispoQuickSaved();
+    } catch (err) {
+      console.error('[dispo] quick save failed:', err);
+      showToast('Sauvegarde du décompte impossible. Réessayez.', 'error');
+    }
+  });
+}
+
+function showDispoQuickSaved() {
+  const msg = document.getElementById('dispoSaved');
+  if (!msg) return;
+  msg.textContent = '✓ Sauvegardé';
+  msg.classList.remove('hidden', 'error');
+  clearTimeout(dispoQuickToastTimer);
+  dispoQuickToastTimer = setTimeout(() => msg.classList.add('hidden'), 1800);
 }
 
 document.getElementById('dispoCheckAllBtn')?.addEventListener('click', () => {

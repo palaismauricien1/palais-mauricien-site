@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef, lazy, Suspense } from 'react';
 import { Routes, Route, Link, Navigate, useLocation } from 'react-router-dom';
 import {
   ShoppingCart,
@@ -78,15 +78,28 @@ import { trackVisitIfConsented } from './lib/tracking';
 import { CookieBanner } from './components/CookieBanner';
 import { Seo } from './components/Seo';
 import { breadcrumbLd } from './components/seoUtils';
-import MentionsLegales from './pages/MentionsLegales';
-import DishPage from './pages/DishPage';
+
+// Pages "feuilles" hors parcours d'accueil : chargées à la demande pour alléger
+// le bundle initial (Suspense sans fallback visible — le contenu apparaît dès
+// l'arrivée du chunk, sans flash de spinner).
+const MentionsLegales = lazy(() => import('./pages/MentionsLegales'));
+const DishPage = lazy(() => import('./pages/DishPage'));
 
 function ScrollToTop() {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
 
   useEffect(() => {
+    // Ancres (#histoire) : on laisse le navigateur cadrer la section ciblée,
+    // sinon on remonte en haut à chaque changement de route.
+    if (hash) {
+      const el = document.getElementById(hash.slice(1));
+      if (el) {
+        el.scrollIntoView();
+        return;
+      }
+    }
     window.scrollTo(0, 0);
-  }, [pathname]);
+  }, [pathname, hash]);
 
   return null;
 }
@@ -99,9 +112,11 @@ export default function App() {
 
   return (
     <SiteConfigProvider>
+      <a href="#contenu" className="skip-link">Aller au contenu</a>
       <CustomCursor />
       <Preloader />
       <ScrollToTop />
+      <Suspense fallback={null}>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/aujourdhui" element={<AujourdhuiPage />} />
@@ -116,6 +131,7 @@ export default function App() {
         <Route path="/brochette-mauricienne" element={<DishPage slug="brochette-mauricienne" />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      </Suspense>
       <CookieBanner />
     </SiteConfigProvider>
   );
@@ -249,6 +265,9 @@ export function SiteHeader() {
               <button
                 className="lg:hidden text-dark-800"
                 onClick={() => setMobileOpen(!mobileOpen)}
+                aria-label={mobileOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+                aria-expanded={mobileOpen}
+                aria-controls="mobile-nav"
               >
                 {mobileOpen ? <X size={20} /> : <Menu size={20} />}
               </button>
@@ -258,7 +277,7 @@ export function SiteHeader() {
 
         {/* Mobile nav */}
         {mobileOpen && (
-          <div className="lg:hidden mx-auto w-[90%] max-w-[1400px] mt-3 rounded-3xl bg-[#FBF7EC]/95 backdrop-blur-md border border-white/50 shadow-lg shadow-black/15 px-6 py-6 space-y-5">
+          <div id="mobile-nav" className="lg:hidden mx-auto w-[90%] max-w-[1400px] mt-3 rounded-3xl bg-[#FBF7EC]/95 backdrop-blur-md border border-white/50 shadow-lg shadow-black/15 px-6 py-6 space-y-5">
             {navLinks.map((link) => {
               const active = location.pathname === link.to;
               return (
@@ -392,6 +411,7 @@ function HomePage() {
         jsonLd={breadcrumbLd([['Accueil', '/']])}
       />
       <SiteHeader />
+      <main id="contenu">
 
       {/* ── HERO ── */}
       <section className="relative min-h-[100svh] lg:min-h-screen flex flex-col overflow-hidden">
@@ -558,6 +578,7 @@ function HomePage() {
       {/* ── COMMENT COMMANDER ── */}
       <HowToOrder />
 
+      </main>
       <SiteFooter />
       <PersistentCTAs />
     </div>
@@ -593,7 +614,7 @@ export function SiteFooter() {
       <div className="max-w-[1400px] mx-auto grid sm:grid-cols-3 gap-10">
         <div>
           <p className="text-gold-400 font-playfair font-bold tracking-widest2 text-sm mb-2">PALAIS MAURICIEN</p>
-          <p className="text-gold-500/400 text-[9px] tracking-widest3 mb-4">LE PORT · LA RÉUNION</p>
+          <p className="text-gold-500/40 text-[9px] tracking-widest3 mb-4">LE PORT · LA RÉUNION</p>
           <p className="text-white/70 text-xs leading-relaxed">
             Cuisine mauricienne authentique,<br />
             préparée avec passion chaque jour.
@@ -1594,6 +1615,7 @@ function AujourdhuiPage() {
         jsonLd={breadcrumbLd([['Accueil', '/'], ["Disponible aujourd'hui", '/aujourdhui']])}
       />
       <SiteHeader />
+      <main id="contenu">
 
       {/* ── EN-TÊTE ── */}
       <section className="pt-40 pb-6 px-6 lg:px-10 bg-dark-900">
@@ -1687,6 +1709,7 @@ function AujourdhuiPage() {
         </Reveal>
       </section>
 
+      </main>
       <SiteFooter />
       <PersistentCTAs />
     </div>
@@ -1806,6 +1829,7 @@ function MenuPage() {
         jsonLd={[breadcrumbLd([['Accueil', '/'], ['Menu', '/menu']]), MENU_JSONLD]}
       />
       <SiteHeader />
+      <main id="contenu">
 
       {/* ── FOND SUR TOUTE LA PAGE ── */}
       <div
@@ -1980,6 +2004,7 @@ function MenuPage() {
         </Reveal>
       </section>
 
+      </main>
       <SiteFooter />
       <PersistentCTAs />
 
@@ -2018,16 +2043,52 @@ function DishModal({
   onPrev: () => void;
   onNext: () => void;
 }) {
+  const panelRef = useRef<HTMLDivElement>(null);
+  const titleId = `dish-modal-title-${index}`;
+
+  // Focus dans la modale à l'ouverture, restauration à la fermeture, et piège
+  // de focus (Tab reste dans la modale) pour l'accessibilité clavier.
+  useEffect(() => {
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    panelRef.current?.querySelector<HTMLElement>('button, a[href]')?.focus();
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return;
+      const focusables = panelRef.current?.querySelectorAll<HTMLElement>(
+        'button, a[href], [tabindex]:not([tabindex="-1"])'
+      );
+      if (!focusables || focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      previouslyFocused?.focus?.();
+    };
+  }, []);
+
   return (
     <div
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={titleId}
       className={`fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-8 bg-black/70 backdrop-blur-sm transition-opacity duration-200 ${
         visible ? 'opacity-100' : 'opacity-0'
       }`}
     >
       <div
+        ref={panelRef}
         className={`relative w-full max-w-3xl max-h-[90vh] bg-dark-800 border border-gold-500/25 rounded-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-2 transition-all duration-200 ${
           visible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
         }`}
@@ -2046,7 +2107,7 @@ function DishModal({
 
         <div className="p-6 sm:p-8 flex flex-col overflow-y-auto">
           <p className="text-gold-500/70 text-[10px] tracking-widest3 mb-3">{categoryLabel}</p>
-          <h3 className="font-playfair text-2xl sm:text-3xl font-bold text-white leading-tight mb-4">
+          <h3 id={titleId} className="font-playfair text-2xl sm:text-3xl font-bold text-white leading-tight mb-4">
             {dish.name}
           </h3>
           <p className="text-white/60 text-sm leading-relaxed mb-6">{dish.description}</p>
@@ -2165,6 +2226,7 @@ function GaleriePage() {
         jsonLd={breadcrumbLd([['Accueil', '/'], ['Galerie', '/galerie']])}
       />
       <SiteHeader />
+      <main id="contenu">
 
       {/* ── EN-TÊTE + FILTRES ── */}
       <section className="pt-40 pb-14 px-6 lg:px-10 bg-dark-900">
@@ -2215,6 +2277,7 @@ function GaleriePage() {
         </div>
       </section>
 
+      </main>
       <SiteFooter />
       <PersistentCTAs />
     </div>
@@ -2249,6 +2312,7 @@ function AboutPage() {
         jsonLd={breadcrumbLd([['Accueil', '/'], ['À propos', '/a-propos']])}
       />
       <SiteHeader />
+      <main id="contenu">
 
       {/* ── QUI SOMMES-NOUS ── */}
       <section className="relative pt-40 pb-28 px-6 lg:px-10 overflow-hidden">
@@ -2398,6 +2462,7 @@ Notre cuisine est 100 % halal et certifiée, pour vous offrir des plats génére
         </Reveal>
       </section>
 
+      </main>
       <SiteFooter />
       <PersistentCTAs />
     </div>
@@ -2459,6 +2524,7 @@ function ContactPage() {
         ]}
       />
       <SiteHeader />
+      <main id="contenu">
 
       {/* ── EN-TÊTE ── */}
       <section className="relative pt-40 pb-16 px-6 lg:px-10 overflow-hidden">
@@ -2694,6 +2760,7 @@ function ContactPage() {
         </div>
       </section>
 
+      </main>
       <SiteFooter />
       <PersistentCTAs />
     </div>
@@ -2710,6 +2777,7 @@ function NotFoundPage() {
         noindex
       />
       <SiteHeader />
+      <main id="contenu">
 
       <section className="pt-48 pb-32 px-6 lg:px-10 bg-dark-900 min-h-[70vh] flex items-center">
         <Reveal className="max-w-[700px] mx-auto text-center">
@@ -2746,6 +2814,7 @@ function NotFoundPage() {
         </Reveal>
       </section>
 
+      </main>
       <SiteFooter />
     </div>
   );
