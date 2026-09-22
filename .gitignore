@@ -37,3 +37,7 @@ dist/
 
 # QA (scripts + screenshots de test, non commités)
 _qa/
+
+# Sauvegarde ancienne version statique (hors git / hors Vercel)
+_ancienne-version-statique-2026-09-20/
+.env*
