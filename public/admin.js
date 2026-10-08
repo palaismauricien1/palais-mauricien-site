@@ -546,24 +546,49 @@ document.getElementById('itemImgUrl')?.addEventListener('input', e => {
   else preview.style.display = 'none';
 });
 
-// Compresse une image dans un canvas et retourne une Data URL JPEG (~70% qualité, max 1200px côté long).
+// Budget par image stockée en base (data URL). Les photos vivent dans le JSON
+// `site_config`, lui-même mis en cache dans localStorage (~5 Mo, UTF-16 => x2).
+// Au-delà, le cache déborde et l'admin semble "ne rien enregistrer".
+const IMG_MAX_CHARS = 120_000; // ~120 Ko de data URL par plat
+
+// Compresse une image et retourne une Data URL sous IMG_MAX_CHARS.
+// WebP si le navigateur le gère (bien plus léger que JPEG), puis dégradation
+// progressive de la qualité et de la taille jusqu'à tenir dans le budget.
 function compressImage(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = e => {
       const img = new Image();
       img.onload = () => {
-        const MAX = 1200;
-        let { width: w, height: h } = img;
-        if (w > MAX || h > MAX) {
-          if (w >= h) { h = Math.round(h * MAX / w); w = MAX; }
-          else        { w = Math.round(w * MAX / h); h = MAX; }
-        }
         const canvas = document.createElement('canvas');
-        canvas.width = w; canvas.height = h;
-        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-        const isPng = file.type === 'image/png';
-        resolve(canvas.toDataURL(isPng ? 'image/png' : 'image/jpeg', 0.78));
+        const ctx = canvas.getContext('2d');
+
+        // WebP supporté ? (toDataURL retombe silencieusement sur PNG sinon)
+        const probe = document.createElement('canvas');
+        probe.width = probe.height = 1;
+        const webpOk = probe.toDataURL('image/webp').startsWith('data:image/webp');
+        const mime = webpOk ? 'image/webp' : 'image/jpeg';
+
+        const render = (maxSide, quality) => {
+          let { width: w, height: h } = img;
+          if (w > maxSide || h > maxSide) {
+            if (w >= h) { h = Math.round(h * maxSide / w); w = maxSide; }
+            else        { w = Math.round(w * maxSide / h); h = maxSide; }
+          }
+          canvas.width = w; canvas.height = h;
+          ctx.clearRect(0, 0, w, h);
+          ctx.drawImage(img, 0, 0, w, h);
+          return canvas.toDataURL(mime, quality);
+        };
+
+        // Paliers du plus beau au plus léger ; on garde le premier qui tient.
+        const steps = [[900, 0.72], [900, 0.6], [800, 0.55], [700, 0.5], [600, 0.45], [500, 0.4]];
+        let out = '';
+        for (const [side, q] of steps) {
+          out = render(side, q);
+          if (out.length <= IMG_MAX_CHARS) break;
+        }
+        resolve(out);
       };
       img.onerror = reject;
       img.src = e.target.result;
@@ -592,8 +617,8 @@ document.getElementById('itemImgFile')?.addEventListener('change', async e => {
 
   try {
     const dataUrl = await compressImage(file);
-    // Vérifie que le résultat compressé est raisonnable (~700 KB max après base64)
-    if (dataUrl.length > 700_000) {
+    // Garde-fou : même après dégradation, l'image doit tenir dans le budget.
+    if (dataUrl.length > IMG_MAX_CHARS) {
       showToast('Image encore trop lourde après compression. Essayez une plus petite.', 'error');
       e.target.value = '';
       return;

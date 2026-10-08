@@ -215,8 +215,13 @@ async function saveData(data) {
       console.error('[saveData] cloudSaveConfig failed:', e?.message);
     }
   }
-  // OK si au moins une des deux a marché : le cloud rattrape le local plein
-  return localOk || cloudOk;
+  // Le cloud est la source de vérité partagée (site public + autres appareils).
+  // Si le cloud a réussi mais que le cache local a débordé, on purge ce cache :
+  // sans ça, getData() relirait l'ancienne version et l'admin semblerait "ne rien faire".
+  if (cloudOk && !localOk) {
+    try { localStorage.removeItem('pm_data'); } catch (e) { /* cache non purgeable */ }
+  }
+  return cloudOk;
 }
 
 function getNextId(data) {
