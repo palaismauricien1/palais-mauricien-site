@@ -502,12 +502,12 @@ export function getDayServices(h: DayHours): { midi?: string; soir?: string } | 
   const soir = h.soir || { actif: false, open: '18:30', close: '21:30' };
   if (h.closed || (!midi.actif && !soir.actif)) return null;
   const out: { midi?: string; soir?: string } = {};
-  if (midi.actif) out.midi = `${midi.open}–${midi.close}`;
-  if (soir.actif) out.soir = `${soir.open}–${soir.close}`;
+  if (midi.actif) out.midi = `${midi.open} à ${midi.close}`;
+  if (soir.actif) out.soir = `${soir.open} à ${soir.close}`;
   return out;
 }
 
-/** "10:30–14:30 / 18:30–21:30", ou "Fermé". */
+/** "10:30 à 14:30 / 18:30 à 21:30", ou "Fermé". */
 export function formatDayHours(h: DayHours): string {
   const services = getDayServices(h);
   if (!services) return 'Fermé';

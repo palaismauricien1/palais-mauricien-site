@@ -551,7 +551,7 @@ function HomePage() {
       <section className="bg-dark-700 py-24 px-6 lg:px-10">
         <div className="max-w-[1400px] mx-auto">
           <Reveal className="text-center mb-16">
-            <p className="font-playfair italic text-gold-400 text-sm mb-4">– Explorer –</p>
+            <p className="font-playfair italic text-gold-400 text-sm mb-4">Explorer</p>
             <h2 className="font-playfair text-4xl lg:text-5xl font-bold text-white leading-tight">
               Tout ce que<br />
               nous <span className="italic text-gold-400">proposons</span>
@@ -600,7 +600,7 @@ function buildHoursGroups(hours: SiteConfig['hours']): { label: string; text: st
     else groups.push({ start: k, end: k, text });
   });
   return groups.map((g) => ({
-    label: g.start === g.end ? DAY_LABELS[g.start] : `${DAY_LABELS[g.start]} – ${DAY_LABELS[g.end]}`,
+    label: g.start === g.end ? DAY_LABELS[g.start] : `${DAY_LABELS[g.start]} au ${DAY_LABELS[g.end].toLowerCase()}`,
     text: g.text,
   }));
 }
@@ -779,18 +779,24 @@ export function Reveal({
 }
 
 /** Tous les items visibles du config, toutes catégories confondues (carrousel "sélection"). */
+/** Plats de la sélection du jour : visibles ET cochés "dispo aujourd'hui"
+ *  dans l'admin, comme la page /aujourdhui. Repli sur tous les plats visibles
+ *  tant que le restaurant n'a rien coché, pour ne jamais afficher un carrousel vide. */
 function useVisibleDishes() {
   const config = useSiteConfig();
-  return useMemo(
-    () =>
-      CAT_KEYS.flatMap((cat) => config.menu[cat].filter((item) => item.visible)).map((item) => ({
-        id: item.id,
-        name: item.name,
-        price: getDisplayPrice(item),
-        image: resolveImg(item.img),
-      })),
-    [config]
-  );
+  return useMemo(() => {
+    const dispo = getDispoToday(config);
+    const selection = CAT_KEYS.flatMap((cat) => dispo[cat]);
+    const source = selection.length
+      ? selection
+      : CAT_KEYS.flatMap((cat) => config.menu[cat].filter((item) => item.visible));
+    return source.map((item) => ({
+      id: item.id,
+      name: item.name,
+      price: getDisplayPrice(item),
+      image: resolveImg(item.img),
+    }));
+  }, [config]);
 }
 
 function AboutContent() {
@@ -876,7 +882,7 @@ function TodaysSelection() {
     <section id="aujourdhui" className="relative bg-[#FAF7F2] py-24 px-6 lg:px-10">
       <div className="max-w-[1400px] mx-auto">
         <Reveal className="text-center mb-14">
-          <p className="font-playfair italic text-gold-400 text-sm mb-4">– La sélection du jour –</p>
+          <p className="font-playfair italic text-gold-400 text-sm mb-4">La sélection du jour</p>
           <div className="w-10 h-px bg-gold-600/50 mx-auto mb-5" />
           <h2 className="font-playfair text-4xl sm:text-5xl lg:text-6xl font-bold text-dark-800 leading-[1.05]">
             Aujourd'hui<br />
@@ -905,7 +911,7 @@ function TodaysSelection() {
           <div
             ref={trackRef}
             onScroll={handleScroll}
-            className="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="flex gap-6 overflow-x-auto overflow-y-hidden overscroll-x-contain touch-pan-x snap-x snap-mandatory scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {todaysDishes.map((dish, i) => (
               <div
@@ -1172,7 +1178,7 @@ function Testimonials() {
     >
       <div className="max-w-[1400px] mx-auto">
         <Reveal className="text-center mb-14">
-          <p className="font-playfair italic text-gold-600 text-sm mb-4">– Témoignages –</p>
+          <p className="font-playfair italic text-gold-600 text-sm mb-4">Témoignages</p>
           <h2 className="font-playfair text-3xl sm:text-4xl font-bold text-dark-800 leading-tight">
             Ils nous ont noté<br />
             4,4 / 5 sur Google.
@@ -1345,7 +1351,7 @@ function FaqSection() {
 
       <div className="relative z-10 max-w-[900px] mx-auto">
         <Reveal className="text-center mb-10">
-          <p className="font-playfair italic text-gold-600 text-sm mb-4">– Questions fréquentes –</p>
+          <p className="font-playfair italic text-gold-600 text-sm mb-4">Questions fréquentes</p>
           <h2 className="font-playfair text-4xl sm:text-5xl font-bold text-dark-800 leading-tight">
             Tout ce que <span className="italic text-gold-600">vous voulez savoir</span>
           </h2>
@@ -2640,7 +2646,7 @@ function ContactPage() {
               <div className="rounded-xl border border-red-600/20 bg-red-600/5 px-5 py-3.5 mb-4">
                 <p className="text-red-700 text-sm font-medium">
                   Fermeture exceptionnelle aujourd'hui
-                  {closure.reason ? ` — ${closure.reason}` : ''}
+                  {closure.reason ? `, ${closure.reason}` : ''}
                 </p>
               </div>
             )}
@@ -2696,7 +2702,7 @@ function ContactPage() {
                   {upcomingClosures.map((c) => (
                     <li key={c.date} className="text-dark-800/70 text-sm">
                       <span className="font-medium text-dark-800">{formatDateFR(c.date)}</span>
-                      {c.reason ? ` — ${c.reason}` : ''}
+                      {c.reason ? `, ${c.reason}` : ''}
                     </li>
                   ))}
                 </ul>
