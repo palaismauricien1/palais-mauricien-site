@@ -795,6 +795,7 @@ function useVisibleDishes() {
       name: item.name,
       price: getDisplayPrice(item),
       image: resolveImg(item.img),
+      remaining: typeof item.remaining === 'number' ? item.remaining : null,
     }));
   }, [config]);
 }
@@ -829,20 +830,42 @@ function AboutContent() {
   );
 }
 
-function SelectionCard({ name, price, image }: { name: string; price: string; image: string }) {
+/** Même information que RemainingBadge, en version fond clair (section Aujourd'hui de l'accueil). */
+function RemainingBadgeLight({ remaining }: { remaining: number }) {
+  if (remaining <= 0) {
+    return (
+      <span className="inline-flex items-center gap-1.5 rounded-full border border-dark-800/15 bg-dark-800/[0.06] text-dark-800/55 px-2.5 py-1 text-[10px] tracking-wide font-semibold font-sans">
+        Épuisé
+      </span>
+    );
+  }
   return (
-    <div className="relative w-[250px] sm:w-[280px] h-[368px] sm:h-[404px] shrink-0 snap-start flex flex-col border border-gold-600/15 rounded-2xl overflow-hidden bg-white transition-all duration-300 ease-out hover:-translate-y-1.5">
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-gold-600/35 bg-gold-600/10 text-gold-700 px-2.5 py-1 text-[10px] tracking-wide font-semibold font-sans">
+      <Flame size={10} />
+      {remaining} portion{remaining > 1 ? 's' : ''} restante{remaining > 1 ? 's' : ''}
+    </span>
+  );
+}
+
+function SelectionCard({ name, price, image, remaining }: { name: string; price: string; image: string; remaining?: number | null }) {
+  return (
+    <div className="relative w-[250px] sm:w-[280px] h-[340px] sm:h-[356px] shrink-0 snap-start flex flex-col border border-gold-600/15 rounded-2xl overflow-hidden bg-white transition-all duration-300 ease-out hover:-translate-y-1.5">
       {/* Gold corner accents */}
       <span className="pointer-events-none absolute top-0 right-0 w-9 h-9 border-t-2 border-r-2 border-gold-500 rounded-tr-2xl z-10" />
       <span className="pointer-events-none absolute bottom-0 left-0 w-9 h-9 border-b-2 border-l-2 border-gold-500 rounded-bl-2xl z-10" />
 
-      <div className="h-64 sm:h-72 overflow-hidden group shrink-0">
+      <div className="h-60 sm:h-64 overflow-hidden group shrink-0">
         <img src={image} onError={onImgError} alt={name} className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110" loading="lazy" />
       </div>
-      <div className="flex-1 p-5 flex items-center justify-between gap-3 min-w-0">
+      <div className="flex-1 px-5 py-4 flex items-start justify-between gap-3 min-w-0">
         <div className="min-w-0">
           <h3 className="font-playfair text-xl font-bold text-dark-800 leading-tight line-clamp-2">{name}</h3>
           <p className="text-gold-700 text-sm mt-1">{price}</p>
+          {typeof remaining === 'number' && (
+            <div className="mt-2">
+              <RemainingBadgeLight remaining={remaining} />
+            </div>
+          )}
         </div>
         <Link
           to="/menu"
@@ -918,10 +941,10 @@ function TodaysSelection() {
                 key={dish.id}
                 style={{ transitionDelay: cardsVisible ? `${Math.min(i, 6) * 80}ms` : '0ms' }}
                 className={`shrink-0 snap-start transition-all duration-500 ease-out ${
-                  cardsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+                  cardsVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-6'
                 }`}
               >
-                <SelectionCard name={dish.name} price={dish.price} image={dish.image} />
+                <SelectionCard name={dish.name} price={dish.price} image={dish.image} remaining={dish.remaining} />
               </div>
             ))}
           </div>
